@@ -1,0 +1,10 @@
+{
+    "name": "os2display/core-bundle",
+    "description": "Os2Display core",
+    "type": "symfony-bundle",
+    "autoload": {
+        "psr-4": {
+            "Os2Display\\CoreBundle\\": ""
+        }
+    }
+}
