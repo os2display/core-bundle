@@ -23,14 +23,14 @@ class Group extends ApiEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "search", "api-bulk"})
+     * @Groups({"api", "search", "api-bulk", "channel", "slide", "media", "screen"})
      */
     protected $id;
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(name="title", type="string", nullable=false)
-     * @Groups({"api", "api-bulk"})
+     * @Groups({"api", "api-bulk", "channel", "slide", "media", "screen"})
      */
     protected $title;
 
@@ -59,7 +59,7 @@ class Group extends ApiEntity
     /**
      * @VirtualProperty()
      * @SerializedName("displayName")
-     * @Groups({"api"})
+     * @Groups({"api", "channel", "slide", "media", "screen"})
      */
     public function __toString()
     {
@@ -139,9 +139,9 @@ class Group extends ApiEntity
         return $this->userGroups;
     }
 
-    public function buildUsers($force = false)
+    public function buildUsers($force = FALSE)
     {
-        if ($this->users === null || $force) {
+        if ($this->users === NULL || $force) {
             $users = [];
             $userGroups = $this->getUserGroups();
             foreach ($userGroups as $userGroup) {
@@ -173,7 +173,7 @@ class Group extends ApiEntity
      */
     public function addRole($role)
     {
-        if ($this->roles === null) {
+        if ($this->roles === NULL) {
             $this->roles = [];
         }
         if (!$this->hasRole($role)) {
@@ -188,7 +188,7 @@ class Group extends ApiEntity
      */
     public function hasRole($role)
     {
-        return in_array(strtoupper($role), $this->roles, true);
+        return in_array(strtoupper($role), $this->roles, TRUE);
     }
 
     public function getRoles()
