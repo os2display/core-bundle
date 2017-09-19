@@ -125,6 +125,9 @@ class SearchCommand extends ContainerAwareCommand {
     if ($data->status == 200) {
       $this->output->write(sprintf('.'));
     }
+    elseif ($data->status == 201) {
+      $this->output->write(sprintf('C'));
+    }
     elseif ($data->status == 409) {
       // Document already exists, so update.
       $this->indexEntity($entity, 'PUT');
