@@ -23,7 +23,7 @@ class CreateDefaultUserGroupCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('os2:create-default-user-group')
+            ->setName('os2display:core:create-default-user-group')
             ->setDescription('Create a default user group and add all users and content to the group');
     }
 

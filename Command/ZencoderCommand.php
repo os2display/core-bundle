@@ -28,7 +28,7 @@ class ZencoderCommand extends ContainerAwareCommand {
    */
   protected function configure() {
     $this
-      ->setName('os2:zencoder')
+      ->setName('os2display:core:zencoder')
       ->setDescription('Job queue callback')
       ->addArgument(
         'json',

@@ -32,7 +32,7 @@ class SearchCommand extends ContainerAwareCommand {
    * Configure the command
    */
   protected function configure() {
-    $this->setName('os2:reindex')
+    $this->setName('os2display:core:reindex')
       ->setDescription('Re-index all in the search backend.');
   }
 

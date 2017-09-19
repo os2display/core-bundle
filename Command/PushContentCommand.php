@@ -26,7 +26,7 @@ class PushContentCommand extends ContainerAwareCommand {
    */
   protected function configure() {
     $this
-      ->setName('os2:push')
+      ->setName('os2display:core:push')
       ->setDescription('Push content to the screens')
       ->addOption(
         'force',
