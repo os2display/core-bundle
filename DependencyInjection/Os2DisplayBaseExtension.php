@@ -38,7 +38,7 @@ class Os2DisplayBaseExtension extends Extension
                 $container->getParameter('external_assets') : [];
             if (array_key_exists('assets', $angular) && is_array($angular['assets'])) {
                 foreach ($angular['assets'] as $key => $module) {
-                    if (!in_array($key, $assets)) {
+                    if (!array_key_exists($key, $assets)) {
                         $assets[$key] = $module;
                     } else {
                         $assets[$key] = array_merge_recursive(
