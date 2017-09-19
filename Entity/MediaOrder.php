@@ -18,101 +18,109 @@ use Os2Display\MediaBundle\Entity\Media as Media;
  * @ORM\Table(name="ik_media_order")
  * @ORM\Entity
  */
-class MediaOrder {
-  /**
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  private $id;
+class MediaOrder
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
-  /**
-   * @ORM\Column(name="sort_order", type="integer")
-   */
-  private $sortOrder;
+    /**
+     * @ORM\Column(name="sort_order", type="integer")
+     */
+    private $sortOrder;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Slide", inversedBy="mediaOrders")
-   * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
-   */
-  private $slide;
+    /**
+     * @ORM\ManyToOne(targetEntity="Slide", inversedBy="mediaOrders")
+     * @ORM\JoinColumn(name="slide_id", referencedColumnName="id")
+     */
+    private $slide;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Os2Display\MediaBundle\Entity\Media", inversedBy="mediaOrders")
-   * @ORM\JoinColumn(name="media_id", referencedColumnName="id")
-   */
-  private $media;
+    /**
+     * @ORM\ManyToOne(targetEntity="Os2Display\MediaBundle\Entity\Media", inversedBy="mediaOrders")
+     * @ORM\JoinColumn(name="media_id", referencedColumnName="id")
+     */
+    private $media;
 
 
-  /**
-   * Get id
-   *
-   * @return integer
-   */
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-  /**
-   * Set sortOrder
-   *
-   * @param integer $sortOrder
-   * @return MediaOrder
-   */
-  public function setSortOrder($sortOrder) {
-    $this->sortOrder = $sortOrder;
+    /**
+     * Set sortOrder
+     *
+     * @param integer $sortOrder
+     * @return MediaOrder
+     */
+    public function setSortOrder($sortOrder)
+    {
+        $this->sortOrder = $sortOrder;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get sortOrder
-   *
-   * @return integer
-   */
-  public function getSortOrder() {
-    return $this->sortOrder;
-  }
+    /**
+     * Get sortOrder
+     *
+     * @return integer
+     */
+    public function getSortOrder()
+    {
+        return $this->sortOrder;
+    }
 
-  /**
-   * Set slide
-   *
-   * @param null|\Os2Display\CoreBundle\Entity\Slide $slide
-   * @return MediaOrder
-   */
-  public function setSlide(\Os2Display\CoreBundle\Entity\Slide $slide = NULL) {
-    $this->slide = $slide;
+    /**
+     * Set slide
+     *
+     * @param null|\Os2Display\CoreBundle\Entity\Slide $slide
+     * @return MediaOrder
+     */
+    public function setSlide(\Os2Display\CoreBundle\Entity\Slide $slide = null)
+    {
+        $this->slide = $slide;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get slide
-   *
-   * @return null|\Os2Display\CoreBundle\Entity\Slide
-   */
-  public function getSlide() {
-    return $this->slide;
-  }
+    /**
+     * Get slide
+     *
+     * @return null|\Os2Display\CoreBundle\Entity\Slide
+     */
+    public function getSlide()
+    {
+        return $this->slide;
+    }
 
-  /**
-   * Set media
-   *
-   * @param null|\Os2Display\MediaBundle\Entity\Media $media
-   * @return MediaOrder
-   */
-  public function setMedia(\Os2Display\MediaBundle\Entity\Media $media = NULL) {
-    $this->media = $media;
+    /**
+     * Set media
+     *
+     * @param null|\Os2Display\MediaBundle\Entity\Media $media
+     * @return MediaOrder
+     */
+    public function setMedia(\Os2Display\MediaBundle\Entity\Media $media = NULL)
+    {
+        $this->media = $media;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get media
-   *
-   * @return null|\Os2Display\MediaBundle\Entity\Media
-   */
-  public function getMedia() {
-    return $this->media;
-  }
+    /**
+     * Get media
+     *
+     * @return null|\Os2Display\MediaBundle\Entity\Media
+     */
+    public function getMedia()
+    {
+        return $this->media;
+    }
 }
