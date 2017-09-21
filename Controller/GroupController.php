@@ -90,7 +90,7 @@ class GroupController extends ApiController
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return array
      */
-    public function getRoles(Request $request)
+    public function getRolesAction(Request $request)
     {
         $translator = $this->get('translator');
         $locale = $request->get('locale', $this->getParameter('locale'));
@@ -185,7 +185,7 @@ class GroupController extends ApiController
      *
      * @Rest\Get("/{group}/users")
      */
-    public function getGroupUsers(Group $group)
+    public function getGroupUsersAction(Group $group)
     {
         $users = $group->buildUsers()->getUsers();
 

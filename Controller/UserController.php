@@ -114,7 +114,7 @@ class UserController extends ApiController {
    * @param \Symfony\Component\HttpFoundation\Request $request
    * @return array
    */
-  public function getRoles(Request $request) {
+  public function getRolesAction(Request $request) {
     $translator = $this->get('translator');
     $locale = $request->get('locale', $this->getParameter('locale'));
 
@@ -197,7 +197,7 @@ class UserController extends ApiController {
   /**
    * @Rest\Get("/{user}/group")
    */
-  public function getUserGroups(User $user) {
+  public function getUserGroupsAction(User $user) {
     $groups = $user->buildRoleGroups()->getRoleGroups();
 
     return $this->setApiData($groups);
@@ -213,7 +213,7 @@ class UserController extends ApiController {
    * @param \Os2Display\CoreBundle\Entity\Group $group
    * @return array
    */
-  public function getUserGroupRoles(User $user, Group $group) {
+  public function getUserGroupRolesAction(User $user, Group $group) {
     $items = $this->fetchUserGroupRoles($user, $group);
 
     $roles = array_map(function (UserGroup $userGroup) {
@@ -251,7 +251,7 @@ class UserController extends ApiController {
    * @param \FOS\RestBundle\Request\ParamFetcherInterface $paramFetcher
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function createUserGroup(Request $request, User $user, Group $group, ParamFetcherInterface $paramFetcher) {
+  public function createUserGroupAction(Request $request, User $user, Group $group, ParamFetcherInterface $paramFetcher) {
     $items = $this->updateUserGroupRoles($request, $user, $group, $paramFetcher);
 
     return $this->createCreatedResponse($this->setApiData($items));
@@ -272,7 +272,7 @@ class UserController extends ApiController {
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function updateUserGroupRoles(Request $request, User $user, Group $group, ParamFetcherInterface $paramFetcher) {
+  public function updateUserGroupRolesAction(Request $request, User $user, Group $group, ParamFetcherInterface $paramFetcher) {
     $em = $this->getDoctrine()->getManager();
     $roles = $this->getData($request, 'roles');
 
@@ -310,7 +310,7 @@ class UserController extends ApiController {
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function deleteUserGroupRoles(User $user, Group $group, ParamFetcherInterface $paramFetcher) {
+  public function deleteUserGroupRolesAction(User $user, Group $group, ParamFetcherInterface $paramFetcher) {
     $em = $this->getDoctrine()->getManager();
     $items = $this->fetchUserGroupRoles($user, $group);
     foreach ($items as $item) {

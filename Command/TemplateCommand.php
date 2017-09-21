@@ -26,7 +26,7 @@ class TemplateCommand extends ContainerAwareCommand {
    * Configure the command
    */
   protected function configure() {
-    $this->setName('os2:templates:load')
+    $this->setName('os2display:core:templates:load')
       ->setDescription('Load the templates from the disk into the database.');
   }
 

@@ -27,7 +27,7 @@ class CronCommand extends ContainerAwareCommand {
    */
   protected function configure() {
     $this
-      ->setName('os2:cron')
+      ->setName('os2display:core:cron')
       ->setDescription('Cron');
   }
 

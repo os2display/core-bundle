@@ -32,7 +32,7 @@ class SearchCommand extends ContainerAwareCommand {
    * Configure the command
    */
   protected function configure() {
-    $this->setName('os2:reindex')
+    $this->setName('os2display:core:reindex')
       ->setDescription('Re-index all in the search backend.');
   }
 
@@ -69,28 +69,28 @@ class SearchCommand extends ContainerAwareCommand {
       // Store them for later (see curl serializer hack).
       $media->urls = $urls;
     }
-    $this->indexEnities('Media elements', $entities);
+    $this->indexEntities('Media elements', $entities);
 
     // Find all slides.
     $entities = $this->getContainer()
       ->get('doctrine')
       ->getRepository('Os2DisplayCoreBundle:Slide')
       ->findAll();
-    $this->indexEnities('Slides', $entities);
+    $this->indexEntities('Slides', $entities);
 
     // Find all Channels.
     $entities = $this->getContainer()
       ->get('doctrine')
       ->getRepository('Os2DisplayCoreBundle:Channel')
       ->findAll();
-    $this->indexEnities('Channels', $entities);
+    $this->indexEntities('Channels', $entities);
 
     // Find all slides.
     $entities = $this->getContainer()
       ->get('doctrine')
       ->getRepository('Os2DisplayCoreBundle:Screen')
       ->findAll();
-    $this->indexEnities('Screens', $entities);
+    $this->indexEntities('Screens', $entities);
   }
 
   /**
@@ -101,7 +101,7 @@ class SearchCommand extends ContainerAwareCommand {
    * @param array $entities
    *   The entities to add to the search backend.
    */
-  private function indexEnities($type, $entities) {
+  private function indexEntities($type, $entities) {
     $this->output->write(sprintf('Found %d %s ', count($entities), $type));
 
     foreach ($entities as $entity) {
@@ -124,6 +124,9 @@ class SearchCommand extends ContainerAwareCommand {
     $data = $this->sendEvent($entity, $cmd);
     if ($data->status == 200) {
       $this->output->write(sprintf('.'));
+    }
+    elseif ($data->status == 201) {
+      $this->output->write(sprintf('C'));
     }
     elseif ($data->status == 409) {
       // Document already exists, so update.

@@ -2,6 +2,26 @@
     "name": "os2display/core-bundle",
     "description": "Os2Display core",
     "type": "symfony-bundle",
+    "require": {
+        "php": ">=5.5.0",
+        "debril/rss-atom-bundle": "2.2",
+        "doctrine/doctrine-bundle": "^1.2",
+        "doctrine/doctrine-migrations-bundle": "^1.0",
+        "doctrine/orm": "^2.2",
+        "friendsofsymfony/rest-bundle": "^1.1",
+        "friendsofsymfony/user-bundle": "^1.3",
+        "guzzlehttp/guzzle": "^6.2",
+        "jms/job-queue-bundle": "^1.4",
+        "jms/serializer-bundle": "^0.13",
+        "nelmio/api-doc-bundle": "^2.13",
+        "os2display/media-bundle": "^1.0",
+        "sensio/distribution-bundle": "^3.0",
+        "sensio/framework-extra-bundle": "^3.0",
+        "symfony/assetic-bundle": "^2.3",
+        "symfony/monolog-bundle": "^2.4",
+        "symfony/swiftmailer-bundle": "^2.3",
+        "symfony/symfony": "^2.8"
+    },
     "autoload": {
         "psr-4": {
             "Os2Display\\CoreBundle\\": ""
