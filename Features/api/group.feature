@@ -69,7 +69,6 @@ Feature: admin
     And the JSON node "" should have 1 elements
     And the JSON node "[0].id" should be equal to 1
     And the JSON node "[0].title" should be equal to "The first group"
-    And the JSON node "[0].users" should have 0 elements
 
   Scenario: Get group
     When I sign in with username "admin" and password "admin"
@@ -114,7 +113,6 @@ Feature: admin
     And the JSON node "" should have 1 elements
     And the JSON node "[0].id" should be equal to 1
     And the JSON node "[0].title" should be equal to "The first group (title updated)"
-    And the JSON node "[0].users" should have 0 elements
 
   Scenario: Delete group
     When I sign in with username "admin" and password "admin"

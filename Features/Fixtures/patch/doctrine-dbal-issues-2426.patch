@@ -1,0 +1,28 @@
+diff --git a/vendor/doctrine/dbal/lib/Doctrine/DBAL/Platforms/SqlitePlatform.php b/vendor/doctrine/dbal/lib/Doctrine/DBAL/Platforms/SqlitePlatform.php
+index 4711d99..b4412b5 100644
+--- a/vendor/doctrine/dbal/lib/Doctrine/DBAL/Platforms/SqlitePlatform.php
++++ b/vendor/doctrine/dbal/lib/Doctrine/DBAL/Platforms/SqlitePlatform.php
+@@ -291,8 +291,9 @@ class SqlitePlatform extends AbstractPlatform
+     protected function _getCommonIntegerTypeDeclarationSQL(array $columnDef)
+     {
+         // sqlite autoincrement is implicit for integer PKs, but not when the field is unsigned
+-        if ( ! empty($columnDef['autoincrement'])) {
+-            return '';
++        // @see https://github.com/doctrine/dbal/issues/2426#issuecomment-314810067
++        if ( !empty($columnDef['autoincrement']) && !empty($columnDef['primary']) ) {
++            return ' PRIMARY KEY AUTOINCREMENT ';
+         }
+ 
+         return ! empty($columnDef['unsigned']) ? ' UNSIGNED' : '';
+@@ -326,11 +327,6 @@ class SqlitePlatform extends AbstractPlatform
+             }
+         }
+ 
+-        if (isset($options['primary']) && ! empty($options['primary'])) {
+-            $keyColumns = array_unique(array_values($options['primary']));
+-            $queryFields.= ', PRIMARY KEY('.implode(', ', $keyColumns).')';
+-        }
+-
+         if (isset($options['foreignKeys'])) {
+             foreach ($options['foreignKeys'] as $foreignKey) {
+                 $queryFields.= ', '.$this->getForeignKeyDeclarationSQL($foreignKey);
