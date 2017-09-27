@@ -252,7 +252,7 @@ class UserController extends ApiController {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
   public function createUserGroupAction(Request $request, User $user, Group $group, ParamFetcherInterface $paramFetcher) {
-    $items = $this->updateUserGroupRoles($request, $user, $group, $paramFetcher);
+    $items = $this->updateUserGroupRolesAction($request, $user, $group, $paramFetcher);
 
     return $this->createCreatedResponse($this->setApiData($items));
   }
@@ -293,7 +293,7 @@ class UserController extends ApiController {
       $em->flush();
     }
 
-    return $this->getUserGroupRoles($user, $group);
+    return $this->getUserGroupRolesAction($user, $group);
   }
 
   /**

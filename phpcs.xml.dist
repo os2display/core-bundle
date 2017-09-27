@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="dokk1">
+    <description>PHP CodeSniffer configuration for os2display/core-bundle</description>
+
+    <file>Command</file>
+    <file>Controller</file>
+    <file>DependencyInjection</file>
+    <file>Entity</file>
+    <file>EventListener</file>
+    <file>Events</file>
+    <file>Exception</file>
+    <file>Os2DisplayCoreBundle.php</file>
+    <file>Provider</file>
+    <file>Request</file>
+    <file>Resources</file>
+    <file>Routing</file>
+    <file>Security</file>
+    <file>Services</file>
+    <file>Traits</file>
+
+    <file>Features/Context/</file>
+    <exclude-pattern>Features/Fixtures/Project/app/AppKernel.php</exclude-pattern>
+    <exclude-pattern>Features/Fixtures/Project/app/(cache|logs)</exclude-pattern>
+
+    <!-- Show progress -->
+    <arg value="p"/>
+
+    <rule ref="PSR2"/>
+</ruleset>
