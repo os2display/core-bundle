@@ -145,5 +145,58 @@ Feature: admin
       """
     Then the response status code should be 409
 
+  Scenario: Delete group with content
+    When I sign in with username "admin" and password "admin"
+    When I send a "POST" request to "/api/slide" with body:
+      """
+      {
+        "id": null,
+        "title": "Slide in group",
+        "media": [],
+        "channels": [],
+        "groups": [2]
+      }
+      """
+    Then the response status code should be 200
+    When I send a "POST" request to "/api/channel" with body:
+      """
+      {
+        "id": null,
+        "title": "Channel in group",
+        "slides": [],
+        "screens": [],
+        "groups": [2],
+        "orientation": "",
+        "created_at": 1507280950,
+        "sharing_indexes": [],
+        "schedule_repeat_days": []
+      }
+      """
+    Then the response status code should be 200
+    When I send a "POST" request to "/api/screen" with body:
+      """
+      {
+        "id": null,
+        "title": "Screen in group",
+        "description": "Description of The first screen",
+        "groups": [2]
+      }
+      """
+    Then the response status code should be 200
+    And I send a "DELETE" request to "/api/group/2"
+    Then the response status code should be 204
+    And I send a "GET" request to "/api/group"
+    Then the response status code should be 200
+    And the JSON node "" should have 0 elements
+    And I send a "GET" request to "/api/channel/1"
+    Then the response status code should be 200
+    And the JSON node "title" should be equal to "Channel in group"
+    And I send a "GET" request to "/api/screen/1"
+    Then the response status code should be 200
+    And the JSON node "title" should be equal to "Screen in group"
+    And I send a "GET" request to "/api/slide/1"
+    Then the response status code should be 200
+    And the JSON node "title" should be equal to "Slide in group"
+
   @dropSchema
   Scenario: Drop schema
