@@ -2,6 +2,8 @@
 
 ## In develop
 
+* Changed ScreenTemplateEntity->tools to json_array. Requires update of schema to use.
+
 ## 1.0.9
 
 * Fixed issue with deleting group that contained content.
