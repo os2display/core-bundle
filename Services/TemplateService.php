@@ -223,7 +223,7 @@ class TemplateService {
         }
 
         // Add the tools to the template.
-        $template->setTools((array) $config->tools);
+        $template->setTools((object) $config->tools);
       }
 
       // Ensure that the entity is managed.
