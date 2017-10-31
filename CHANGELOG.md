@@ -1,6 +1,6 @@
 # Os2Display/CoreBundle CHANGELOG
 
-## In develop
+## 1.0.10
 
 * Changed ScreenTemplateEntity->tools to json_array. Requires update of schema to use.
 * Fixed screen save to database.
