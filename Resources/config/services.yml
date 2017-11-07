@@ -90,9 +90,9 @@ services:
     class: Os2Display\CoreBundle\Services\SharingService
     arguments: ['@jms_serializer', '@service_container', '@os2display.utility_service']
     tags:
-      - { name: kernel.event_listener, event: os2Display_sharing_service.add_channel_to_index, method: onAddChannelToIndex }
-      - { name: kernel.event_listener, event: os2Display_sharing_service.remove_channel_from_index, method: onRemoveChannelFromIndex }
-      - { name: kernel.event_listener, event: os2Display_sharing_service.update_channel, method: onUpdateChannel }
+      - { name: kernel.event_listener, event: os2display.core.sharing_service.add_channel_to_index, method: onAddChannelToIndex }
+      - { name: kernel.event_listener, event: os2display.core.sharing_service.remove_channel_from_index, method: onRemoveChannelFromIndex }
+      - { name: kernel.event_listener, event: os2display.core.sharing_service.update_channel, method: onUpdateChannel }
       - { name: kernel.event_listener, event: ik.cron, method: onCron }
 
   os2display.utility_service:
