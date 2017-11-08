@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.0.12
+
+* Fixed zencoder job naming.
+
 ## 1.0.11
 
 * Fixed issue with sharing_service event naming.
