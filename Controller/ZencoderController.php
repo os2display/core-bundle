@@ -44,7 +44,7 @@ class ZencoderController extends Controller {
 
     if ($status) {
       $em = $this->getDoctrine()->getManager();
-      $job = new Job('os2:zencoder', array($json));
+      $job = new Job('os2display:core:zencoder', array($json));
       $em->persist($job);
       $em->flush($job);
     }
