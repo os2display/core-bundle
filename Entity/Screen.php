@@ -89,7 +89,6 @@ class Screen extends ApiEntity implements GroupableEntity
     /**
      * @ORM\Column(name="options", type="json_array", nullable=true)
      * @Groups({"api", "api-bulk", "search", "sharing", "middleware", "screen"})
-     * @JMS\Type("array<string, string>")
      */
     private $options;
 
