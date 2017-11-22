@@ -1,6 +1,17 @@
 # Os2Display/CoreBundle CHANGELOG
 
-## In develop
+## 1.0.12
+
+* Fixed zencoder job naming.
+
+## 1.0.11
+
+* Fixed issue with sharing_service event naming.
+
+## 1.0.10
+
+* Changed ScreenTemplateEntity->tools to json_array. Requires update of schema to use.
+* Fixed screen save to database.
 
 ## 1.0.9
 

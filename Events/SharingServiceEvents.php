@@ -13,7 +13,7 @@ namespace Os2Display\CoreBundle\Events;
  * Class SharingServiceEvents
  */
 final class SharingServiceEvents {
-  const ADD_CHANNEL_TO_INDEX = 'os2display_sharing_service.add_channel_to_index';
-  const REMOVE_CHANNEL_FROM_INDEX = 'os2display_sharing_service.remove_channel_from_index';
-  const UPDATE_CHANNEL = 'os2display_sharing_service.update_channel';
+  const ADD_CHANNEL_TO_INDEX = 'os2display.core.sharing_service.add_channel_to_index';
+  const REMOVE_CHANNEL_FROM_INDEX = 'os2display.core.sharing_service.remove_channel_from_index';
+  const UPDATE_CHANNEL = 'os2display.core.sharing_service.update_channel';
 }

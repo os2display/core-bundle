@@ -62,7 +62,7 @@ class ScreenTemplate
     protected $path;
 
     /**
-     * @ORM\Column(name="tools", type="string")
+     * @ORM\Column(name="tools", type="json_array")
      * @Groups({"screen"})
      */
     protected $tools;
@@ -356,9 +356,9 @@ class ScreenTemplate
      * @param array $tools
      * @return ScreenTemplate
      */
-    public function setTools(array $tools)
+    public function setTools($tools)
     {
-        $this->tools = serialize($tools);
+        $this->tools = $tools;
 
         return $this;
     }
@@ -370,6 +370,6 @@ class ScreenTemplate
      */
     public function getTools()
     {
-        return unserialize($this->tools);
+        return $this->tools;
     }
 }
