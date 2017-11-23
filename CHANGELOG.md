@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.0.13
+
+* Fixed issue with slide template ikSlide.path variable.
+
 ## 1.0.12
 
 * Fixed zencoder job naming.
