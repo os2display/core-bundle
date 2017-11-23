@@ -257,7 +257,7 @@ class TemplateService {
       $template->setPathEdit($this->buildFilePath($serverAddress, $path, $dir, $config->paths->edit));
       $template->setPathCss($this->buildFilePath($serverAddress, $path, $dir, $config->paths->css));
       $template->setPathPreview($this->buildFilePath($serverAddress, $path, $dir, $config->paths->preview));
-      $template->setPath($serverAddress . $dir . '/');
+      $template->setPath($serverAddress . '/' . $dir . '/');
       $template->setOrientation($config->orientation);
       $template->setEmptyOptions($config->empty_options);
       $template->setIdealDimensions($config->ideal_dimensions);
