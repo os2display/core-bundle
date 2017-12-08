@@ -22,9 +22,6 @@ class Os2DisplayBaseExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
         $loader = new Loader\YamlFileLoader($container, new FileLocator($this->dir . '/../Resources/config'));
         $loader->load('services.yml');
 
