@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## develop
+
+* Fixed behat features
+
 ## 1.0.14
 
 * Removed configuration call from base extension
