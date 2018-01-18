@@ -178,6 +178,35 @@ class FeatureContext extends BaseContext implements Context, KernelAwareContext
     }
 
     /**
+     * @Given the following :entityClass entities exist:
+     *
+     * @param mixed $type
+     */
+    public function theFollowingEntitiesExist($entityClass, TableNode $table)
+    {
+        if (!class_exists($entityClass)) {
+            throw new \RuntimeException('Class '.$entityClass.' does not exist.');
+        }
+
+        $accessor = $this->container->get('property_accessor');
+        foreach ($table->getHash() as $row) {
+            $entity = new $entityClass();
+            foreach ($row as $path => $value) {
+                if ($path === 'id') {
+                    // @TODO Make setting id work!
+                    $property = new \ReflectionProperty(get_class($entity), 'id');
+                    $property->setAccessible(true);
+                    $property->setValue($entity, $value);
+                } else {
+                    $accessor->setValue($entity, $path, $value);
+                }
+            }
+            $this->persist($entity);
+        }
+        $this->manager->flush();
+    }
+
+    /**
      * @When I authenticate as :username
      *
      * @param mixed $username
@@ -459,5 +488,28 @@ class FeatureContext extends BaseContext implements Context, KernelAwareContext
     private function deauthenticate()
     {
         $this->container->get('security.token_storage')->setToken(null);
+    }
+
+    protected function persist($entity)
+    {
+        $metadata = null;
+        $idGenerator = null;
+        $idGeneratorType = null;
+        if ($entity->getId() !== null) {
+            // Remove id generator and set id manually.
+            $metadata = $this->manager->getClassMetadata(get_class($entity));
+            $idGenerator = $metadata->idGenerator;
+            $idGeneratorType = $metadata->generatorType;
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        }
+
+        $this->manager->persist($entity);
+
+        // Restore id generator.
+        if ($metadata !== null) {
+            $metadata->setIdGenerator($idGenerator);
+            $metadata->setIdGeneratorType($idGeneratorType);
+        }
     }
 }
