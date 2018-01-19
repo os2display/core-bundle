@@ -178,23 +178,28 @@ class FeatureContext extends BaseContext implements Context, KernelAwareContext
     }
 
     /**
-     * @Given the following :entityClass entities exist:
+     * @Given /^the following (?P<entityClass>.+) entities(?: identified by (?P<idColumn>.+))? exist:$/
      *
      * @param mixed $type
      */
-    public function theFollowingEntitiesExist($entityClass, TableNode $table)
+    public function theFollowingEntitiesExist($entityClass, $idColumn = 'id', TableNode $table)
     {
+        $entityClass = trim($entityClass, '\'"');
+        $idColumn = trim($idColumn, '\'"');
         if (!class_exists($entityClass)) {
             throw new \RuntimeException('Class '.$entityClass.' does not exist.');
         }
 
+        $repository = $this->manager->getRepository($entityClass);
         $accessor = $this->container->get('property_accessor');
         foreach ($table->getHash() as $row) {
+            if ($row[$idColumn] && $repository->find($row[$idColumn]) !== null) {
+                continue;
+            }
             $entity = new $entityClass();
             foreach ($row as $path => $value) {
-                if ($path === 'id') {
-                    // @TODO Make setting id work!
-                    $property = new \ReflectionProperty(get_class($entity), 'id');
+                if ($path === $idColumn) {
+                    $property = new \ReflectionProperty(get_class($entity), $idColumn);
                     $property->setAccessible(true);
                     $property->setValue($entity, $value);
                 } else {
@@ -203,7 +208,6 @@ class FeatureContext extends BaseContext implements Context, KernelAwareContext
             }
             $this->persist($entity);
         }
-        $this->manager->flush();
     }
 
     /**
@@ -500,11 +504,12 @@ class FeatureContext extends BaseContext implements Context, KernelAwareContext
             $metadata = $this->manager->getClassMetadata(get_class($entity));
             $idGenerator = $metadata->idGenerator;
             $idGeneratorType = $metadata->generatorType;
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGeneratorType($metadata::GENERATOR_TYPE_NONE);
         }
 
         $this->manager->persist($entity);
+        // We need to flush to force the id to be set.
+        $this->manager->flush();
 
         // Restore id generator.
         if ($metadata !== null) {
