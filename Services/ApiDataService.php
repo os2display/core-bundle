@@ -9,6 +9,7 @@ use Os2Display\CoreBundle\Entity\Screen;
 use Os2Display\CoreBundle\Entity\Slide;
 use Os2Display\CoreBundle\Entity\User;
 use Os2Display\CoreBundle\Security\EditVoter;
+use Os2Display\CoreBundle\Security\Roles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
@@ -101,10 +102,18 @@ class ApiDataService {
     $roles = $this->container->get('security.role_hierarchy')->getReachableRoles($userRoles);
     $roles = array_unique(array_map(function (Role $role) { return $role->getRole(); }, $roles));
 
-    $user->setApiData([
-      'permissions' => $permissions,
-      'roles' => $roles,
-    ]);
+    $apiData = [
+        'permissions' => $permissions,
+        'roles' => $roles,
+    ];
+
+    if (!$inCollection) {
+        $apiData['viewable_groups'] = $this->container->get('os2display.security_manager')->hasRole($user, Roles::ROLE_ADMIN)
+          ? $this->container->get('doctrine')->getRepository(Group::class)->findAll()
+          : $user->getRoleGroups();
+    }
+
+    $user->setApiData($apiData);
 
     $translator = $this->container->get('translator');
     $request = $this->container->get('request_stack')->getCurrentRequest();
