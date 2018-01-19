@@ -48,18 +48,18 @@ class EntityManagerService {
    *
    * into a list of proper entities of the specified type.
    *
-   * @param array $entities
+   * @param array|\Doctrine\Common\Collections\ArrayCollection $entities
    * @param string $entityClass
    *
    * @return array List of entities.
    */
-  public function loadEntities(array $entities, $entityClass) {
+  public function loadEntities($entities, $entityClass) {
     $ids = [];
     foreach ($entities as $entity) {
       $id = null;
       if (method_exists($entity, 'getId')) {
         $id = $entity->getId();
-      } elseif (is_numeric($entity)) {
+      } elseif (is_scalar($entity)) {
         $id = $entity;
       } elseif (isset($entity->id)) {
         $id = $entity->id;
