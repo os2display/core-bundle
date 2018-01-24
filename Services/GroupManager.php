@@ -94,7 +94,7 @@ class GroupManager {
   }
 
   public function replaceGroups($groups, GroupableEntity $groupable) {
-    $groups = $this->loadGroups($groups);
+    $groups = $this->loadGroupEntities($groups);
     $groupable->getGroups()->clear();
     $this->addGroups($groups, $groupable);
   }
@@ -108,25 +108,8 @@ class GroupManager {
    *
    * into a list of proper Groups.
    */
-  private function loadGroups($groups) {
-    $ids = [];
-    foreach ($groups as $group) {
-      $id = null;
-      if ($group instanceof Group) {
-        $id = $group->getId();
-      } elseif (is_numeric($group)) {
-        $id = $group;
-      } elseif (isset($group->id)) {
-        $id = $group->id;
-      } elseif (isset($group['id'])) {
-        $id = $group['id'];
-      }
-      if ($id !== null) {
-        $ids[] = $id;
-      }
-    }
-
-    return $this->entityManager->getRepository(Group::class)->findBy(['id' => $ids]);
+  private function loadGroupEntities($groups) {
+    return $this->container->get('os2display.entity_manager')->loadEntities($groups, Group::class);
   }
 
   /**
@@ -141,11 +124,26 @@ class GroupManager {
    *   The entity.
    */
   public function setGroups(array $groups, GroupableEntity $entity) {
+    $groups = $this->loadGroups($groups, $entity->getGroups());
+    $entity->setGroups($groups);
+  }
+
+  /**
+   * Load groups, but only the ones the current user has access to.
+   * If a list of existing groups is supplied, any groups in this list that the
+   * user is not member of will be included in the result.
+   *
+   * @param array $groups
+   * @param \Doctrine\Common\Collections\Collection|array|null $existingGroups
+   *
+   * @return \Doctrine\Common\Collections\Collection
+   */
+  public function loadGroups(array $groups, $existingGroups = null) {
     $securityManager = $this->container->get('os2display.security_manager');
     $user = $securityManager->getUser();
 
     // Get the groups to add to entity.
-    $groups = new ArrayCollection($this->loadGroups($groups));
+    $groups = new ArrayCollection($this->loadGroupEntities($groups));
 
     if (!$securityManager->hasRole($user, Roles::ROLE_ADMIN)) {
       $userGroupIds = $user->getUserGroups()->map(function (UserGroup $userGroup) {
@@ -157,18 +155,20 @@ class GroupManager {
         return in_array($group->getId(), $userGroupIds);
       });
 
-      // Get existing entity groups that the current user is not a member of.
-      $additionalGroups = $entity->getGroups()->filter(function (Group $group) use ($userGroupIds) {
-        return !in_array($group->getId(), $userGroupIds);
-      });
+      if ($existingGroups !== null) {
+        // Get existing groups that the current user is not a member of.
+        $additionalGroups = array_filter($this->loadGroupEntities($existingGroups), function (Group $group) use ($userGroupIds) {
+          return !in_array($group->getId(), $userGroupIds);
+        });
 
-      // Add the additional groups.
-      foreach ($additionalGroups as $group) {
-        $groups->add($group);
+        // Add the additional groups.
+        foreach ($additionalGroups as $group) {
+          $groups->add($group);
+        }
       }
     }
 
-    $entity->setGroups($groups);
+    return $groups;
   }
 
   public function addGroup(Group $group, GroupableEntity $groupable) {
