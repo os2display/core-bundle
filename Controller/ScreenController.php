@@ -419,7 +419,6 @@ class ScreenController extends ApiController
         $response = new Response();
 
         if ($screen) {
-            $this->setApiData($screen);
             if ($this->get('os2display.middleware.communication')
                 ->reloadScreen($screen)) {
                 // Element reloaded.
