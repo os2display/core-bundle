@@ -249,6 +249,7 @@ class ScreenController extends ApiController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         if ($screen) {
+            $this->setApiData($screen);
             $serializer = $this->get('jms_serializer');
             $response->headers->set('Content-Type', 'application/json');
             $jsonContent = $serializer->serialize($screen, 'json', SerializationContext::create()
@@ -381,7 +382,6 @@ class ScreenController extends ApiController
         $response = new Response();
 
         if ($screen) {
-            $this->setApiData($screen);
             // Remove the screen from the middleware.
             $this->get('os2display.middleware.communication')->removeScreen($screen);
 
