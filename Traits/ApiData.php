@@ -7,7 +7,7 @@ use JMS\Serializer\Annotation as Serializer;
 trait ApiData {
   /**
    * @var array
-   * @Serializer\Groups({"api", "api-bulk"})
+   * @Serializer\Groups({"api", "api-bulk", "screen"})
    */
   protected $apiData;
 
