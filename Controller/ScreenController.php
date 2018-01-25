@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @Route("/api/screen")
  */
-class ScreenController extends Controller
+class ScreenController extends ApiController
 {
     /**
      * Generates a new unique activation code in the interval between 100000000 and 999999999.
@@ -381,6 +381,7 @@ class ScreenController extends Controller
         $response = new Response();
 
         if ($screen) {
+            $this->setApiData($screen);
             // Remove the screen from the middleware.
             $this->get('os2display.middleware.communication')->removeScreen($screen);
 
@@ -418,6 +419,7 @@ class ScreenController extends Controller
         $response = new Response();
 
         if ($screen) {
+            $this->setApiData($screen);
             if ($this->get('os2display.middleware.communication')
                 ->reloadScreen($screen)) {
                 // Element reloaded.
@@ -445,6 +447,7 @@ class ScreenController extends Controller
     {
         $manager = $this->get('os2display.entity_manager');
         $screenEntities = $manager->findAll(Screen::class);
+        $this->setApiData($screenEntities);
 
         // Create response.
         $response = new Response();
