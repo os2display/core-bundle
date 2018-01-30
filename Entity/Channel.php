@@ -33,7 +33,7 @@ class Channel extends ApiEntity implements GroupableEntity
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "api-bulk", "search", "sharing", "channel", "slide", "screen", "timeline-screen", "timeline-channel"})
+     * @Groups({"api", "api-bulk", "search", "sharing", "channel", "slide", "screen", "timeline-screen", "timeline-channel", "campaign"})
      */
     private $id;
 
@@ -41,7 +41,7 @@ class Channel extends ApiEntity implements GroupableEntity
      * Title.
      *
      * @ORM\Column(name="title", type="text", nullable=false)
-     * @Groups({"api", "api-bulk", "search", "sharing", "middleware", "channel", "slide", "screen", "timeline-screen", "timeline-channel"})
+     * @Groups({"api", "api-bulk", "search", "sharing", "middleware", "channel", "slide", "screen", "timeline-screen", "timeline-channel", "campaign"})
      */
     private $title;
 
