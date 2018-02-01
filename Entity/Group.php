@@ -196,4 +196,12 @@ class Group extends ApiEntity
         return $this->roles;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getGrouping()
+    {
+        return $this->grouping;
+    }
+
 }
