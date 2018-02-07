@@ -5,8 +5,10 @@ namespace Os2Display\CoreBundle\Services;
 use Doctrine\ORM\EntityManagerInterface;
 use Os2Display\CoreBundle\Entity\Group;
 use Os2Display\CoreBundle\Entity\User;
+use Os2Display\CoreBundle\Events\RolesEvent;
 use Os2Display\CoreBundle\Security\EditVoter;
 use Os2Display\CoreBundle\Security\Roles;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Role\Role;
@@ -33,11 +35,15 @@ class SecurityManager {
    */
   protected $roleHierarchy;
 
-  public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $manager, AccessDecisionManagerInterface $decisionManager, RoleHierarchyInterface $roleHierarchy) {
+  /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+  protected $dispatcher;
+
+  public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $manager, AccessDecisionManagerInterface $decisionManager, RoleHierarchyInterface $roleHierarchy, EventDispatcherInterface $dispatcher) {
     $this->tokenStorage = $tokenStorage;
     $this->manager = $manager;
     $this->decisionManager = $decisionManager;
     $this->roleHierarchy = $roleHierarchy;
+    $this->dispatcher = $dispatcher;
   }
 
   public function decide($attributes, $object = null) {
@@ -90,7 +96,20 @@ class SecurityManager {
       return $role->getRole();
     }, $roles);
 
-    return array_unique(array_intersect($roleNames, Roles::getRoleNames()));
+    return array_unique(array_intersect($roleNames, $this->getRoleNames()));
+  }
+
+    /**
+     * Get list of all roles in play.
+     *
+     * @return array
+     */
+  private function getRoleNames() {
+      $event = new RolesEvent();
+      $event->setRoleNames([]);
+      $this->dispatcher->dispatch(RolesEvent::ADD_ROLE_NAMES, $event);
+
+      return $event->getRoleNames();
   }
 
   public function hasRole(User $user, $role) {
