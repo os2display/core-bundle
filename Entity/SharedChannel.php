@@ -27,13 +27,13 @@ class SharedChannel
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "api-bulk", "sharing"})
+     * @Groups({"api", "api-bulk", "sharing", "screen"})
      */
     private $id;
 
     /**
      * @ORM\Column(name="unique_id", type="text", nullable=false)
-     * @Groups({"api", "api-bulk", "search", "sharing"})
+     * @Groups({"api", "api-bulk", "search", "sharing", "screen"})
      */
     private $uniqueId;
 
@@ -65,7 +65,7 @@ class SharedChannel
 
     /**
      * @ORM\Column(name="content", type="text", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "screen"})
      */
     private $content;
 
