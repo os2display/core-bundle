@@ -80,6 +80,8 @@ class BulkLoadController extends Controller {
         }
       }
 
+      $this->get('os2display.api_data')->setApiData($entities);
+
       $serializer = $this->get('jms_serializer');
       $response->setContent($serializer->serialize($entities, 'json', SerializationContext::create()->setGroups(array($serializationGroup))->enableMaxDepthChecks()));
     }

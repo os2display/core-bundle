@@ -2,12 +2,14 @@
 
 namespace Os2Display\CoreBundle\Services;
 
+use Os2Display\CoreBundle\Entity\ApiEntity;
 use Os2Display\CoreBundle\Entity\Channel;
 use Os2Display\CoreBundle\Entity\Group;
 use Os2Display\CoreBundle\Entity\GroupableEntity;
 use Os2Display\CoreBundle\Entity\Screen;
 use Os2Display\CoreBundle\Entity\Slide;
 use Os2Display\CoreBundle\Entity\User;
+use Os2Display\CoreBundle\Events\ApiDataEvent;
 use Os2Display\CoreBundle\Security\EditVoter;
 use Os2Display\CoreBundle\Security\Roles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,6 +43,12 @@ class ApiDataService {
     elseif ($object instanceof GroupableEntity) {
       $this->setApiDataGroupable($object, $inCollection);
     }
+
+    if ($object instanceof ApiEntity) {
+      $event = new ApiDataEvent($object, $inCollection);
+      $this->container->get('event_dispatcher')->dispatch(ApiDataEvent::API_DATA_ADD, $event);
+    }
+
     return $object;
   }
 
