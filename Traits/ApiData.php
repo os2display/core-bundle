@@ -6,24 +6,28 @@ use JMS\Serializer\Annotation as Serializer;
 
 trait ApiData {
   /**
-   * @var mixed
-   * @Serializer\Groups({"api", "api-bulk"})
+   * @var array
+   * @Serializer\Groups({"api", "api-bulk", "screen"})
    */
   protected $apiData;
 
   /**
-   * @param mixed $apiData
+   * @param array $apiData
    *
    * @return ApiData
    */
-  public function setApiData($apiData) {
-    $this->apiData = $apiData;
+  public function setApiData(array $apiData) {
+    if (is_array($this->apiData)) {
+      $this->apiData = array_merge($this->apiData, $apiData);
+    } else {
+      $this->apiData = $apiData;
+    }
 
     return $this;
   }
 
   /**
-   * @return mixed
+   * @return array
    */
   public function getApiData() {
     return $this->apiData;

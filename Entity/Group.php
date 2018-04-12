@@ -23,14 +23,14 @@ class Group extends ApiEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "search", "api-bulk", "channel", "slide", "media", "screen"})
+     * @Groups({"api", "search", "api-bulk", "channel", "slide", "media", "screen", "campaign"})
      */
     protected $id;
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(name="title", type="string", nullable=false)
-     * @Groups({"api", "api-bulk", "channel", "slide", "media", "screen"})
+     * @Groups({"api", "api-bulk", "channel", "slide", "media", "screen", "campaign"})
      */
     protected $title;
 
@@ -194,6 +194,14 @@ class Group extends ApiEntity
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrouping()
+    {
+        return $this->grouping;
     }
 
 }

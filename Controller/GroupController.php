@@ -71,7 +71,7 @@ class GroupController extends ApiController
             throw new HttpDataException(
                 Codes::HTTP_CONFLICT,
                 $data,
-                'Duplicate user',
+                'Duplicate group',
                 $e
             );
         }
@@ -154,7 +154,7 @@ class GroupController extends ApiController
             throw new HttpDataException(
                 Codes::HTTP_CONFLICT,
                 $data,
-                'Duplicate user',
+                'Duplicate group',
                 $e
             );
         }

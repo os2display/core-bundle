@@ -1,5 +1,10 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.1.0
+
+* Fixed behat features
+* Added viewable_groups to apiData.
+
 ## 1.0.14
 
 * Removed configuration call from base extension
