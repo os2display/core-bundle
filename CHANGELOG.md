@@ -1,8 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
-## develop
+## 1.1.0
 
 * Fixed behat features
+* Added viewable_groups to apiData.
 
 ## 1.0.14
 
