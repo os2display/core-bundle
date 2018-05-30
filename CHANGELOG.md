@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.1.1
+
+* Fixed issue where shared channel was not serialized correctly, resulting in a blocked screen-timeline overview.
+
 ## 1.1.0
 
 * Fixed behat features
