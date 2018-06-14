@@ -104,6 +104,9 @@ class UserManager {
    */
   public function updateUser(User $user, $data) {
     $data = $this->normalizeData($data);
+
+    $this->authorizeUpdate($user, $data);
+
     $this->entityService->setValues($user, $data, self::$editableProperties);
 
     $this->entityService->validateEntity($user);
@@ -123,10 +126,6 @@ class UserManager {
       if ($this->isAssoc($data['roles'])) {
         $data['roles'] = array_keys($data['roles']);
       }
-
-      if (!$this->securityMananager->canAssignRoles($data['roles'])) {
-        throw new ValidationException('Invalid roles', $data['roles']);
-      }
     }
 
     return $data;
@@ -139,4 +138,30 @@ class UserManager {
     return array_keys($arr) !== range(0, count($arr) - 1);
   }
 
+
+  /**
+   * Verifies that the user has permissions to do the update.
+   *
+   * @param \Os2Display\CoreBundle\Entity\User $user
+   *   The user we're about to mutate.
+   * @param array $data
+   *   The data we want to change on the user.
+   *
+   * @throws \Os2Display\CoreBundle\Exception\ValidationException
+   */
+  private function authorizeUpdate($user, $data) {
+    // Determine the users current roles and the purposed change.
+    $current_roles = $user->getRoles();
+    $assigning_roles = isset($data['roles']) ? $data['roles'] : [];
+
+    // Check that the two role arrays contains the same values and keys
+    // (regardless of order).
+    $isChangingRoles = ($current_roles != $assigning_roles);
+
+    // Determine if we're attempting to modify roles, if so, require the current
+    // user to be authorized to do so.
+    if ($isChangingRoles && !$this->securityMananager->canAssignRoles($data['roles'])) {
+      throw new ValidationException('No autorized to assign roles', $data['roles']);
+    }
+  }
 }
