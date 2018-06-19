@@ -149,7 +149,7 @@ class UserManager {
    *
    * @throws \Os2Display\CoreBundle\Exception\ValidationException
    */
-  private function authorizeUpdate($user, $data) {
+  private function authorizeUpdate(User $user, $data) {
     // Determine the users current roles and the purposed change.
     $current_roles = $user->getRoles();
     $assigning_roles = isset($data['roles']) ? $data['roles'] : [];
@@ -160,8 +160,8 @@ class UserManager {
 
     // Determine if we're attempting to modify roles, if so, require the current
     // user to be authorized to do so.
-    if ($isChangingRoles && !$this->securityMananager->canAssignRoles($data['roles'])) {
-      throw new ValidationException('No autorized to assign roles', $data['roles']);
+    if ($isChangingRoles && !$this->securityMananager->canAssignRoles($assigning_roles)) {
+      throw new ValidationException('Not autorized to assign roles', $assigning_roles);
     }
   }
 }
