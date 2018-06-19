@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.1.2
+
+* Changed try/catch of FeedService to catch all exceptions.
+
 ## 1.1.1
 
 * Fixed issue where shared channel was not serialized correctly, resulting in a blocked screen-timeline overview.
