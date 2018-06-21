@@ -13,18 +13,11 @@
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony/symfony": "3.4.*",
-        "twig/twig": "^1.0||^2.0",
-        "os2display/media-bundle": "dev-symf34"
+        "twig/twig": "^1.0||^2.0"
     },
     "autoload": {
         "psr-4": {
             "Os2Display\\CoreBundle\\": ""
-        }
-    },
-    "repositories": {
-        "os2display/media-bundle": {
-            "type": "vcs",
-            "url": "https://github.com/os2display/media-bundle"
         }
     },
     "require-dev": {
