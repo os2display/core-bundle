@@ -30,29 +30,6 @@ class ApiController extends FOSRestController {
   }
 
   /**
-   * Create a JSON response with serialized data.
-   *
-   * @param $data
-   * @param int $status
-   * @param array $headers
-   * @param array $serializationGroups
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
-   */
-/*  protected function json($data, $status = 200, array $headers = [], array $serializationGroups = ['api']) {
-    $response = new JsonResponse(NULL, $status, $headers);
-
-    $serializer = $this->get('serializer');
-    $context = SerializationContext::create()->enableMaxDepthChecks();
-    if ($serializationGroups) {
-      $context->setGroups($serializationGroups);
-    }
-    $content = $serializer->serialize($data, 'json', $context);
-    $response->setContent($content);
-
-    return $response;
-  }
-*/
-  /**
    * @param $data
    * @param array $headers
    * @param array $serializationGroups
