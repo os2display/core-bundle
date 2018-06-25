@@ -80,6 +80,10 @@ class MediaController extends Controller {
       $groups = new ArrayCollection($groups ?: []);
       $media->setGroups($groups);
 
+      $media_sizes = getimagesize($file->getPathname());
+      $media->setWidth($media_sizes[0]);
+      $media->setHeight($media_sizes[1]);
+
       $mediaManager = $this->get('sonata.media.manager.media');
       $mediaManager->save($media);
 
