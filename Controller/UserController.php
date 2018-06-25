@@ -8,7 +8,7 @@ namespace Os2Display\CoreBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcherInterface;
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpFoundation\Response;
 use Os2Display\CoreBundle\Entity\Group;
 use Os2Display\CoreBundle\Entity\User;
 use Os2Display\CoreBundle\Entity\UserGroup;
@@ -91,10 +91,10 @@ class UserController extends ApiController {
       $user = $this->get('os2display.user_manager')->createUser($data);
     }
     catch (ValidationException $e) {
-      throw new HttpDataException(Codes::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
+      throw new HttpDataException(Response::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
     }
     catch (DuplicateEntityException $e) {
-      throw new HttpDataException(Codes::HTTP_CONFLICT, $data, 'Duplicate user', $e);
+      throw new HttpDataException(Response::HTTP_CONFLICT, $data, 'Duplicate user', $e);
     }
 
     // Send response.
@@ -163,10 +163,10 @@ class UserController extends ApiController {
       $aUser = $this->get('os2display.user_manager')->updateUser($aUser, $data);
     }
     catch (ValidationException $e) {
-      throw new HttpDataException(Codes::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
+      throw new HttpDataException(Response::HTTP_BAD_REQUEST, $data, 'Invalid data', $e);
     }
     catch (DuplicateEntityException $e) {
-      throw new HttpDataException(Codes::HTTP_CONFLICT, $data, 'Duplicate user', $e);
+      throw new HttpDataException(Response::HTTP_CONFLICT, $data, 'Duplicate user', $e);
     }
 
     $aUser->buildRoleGroups();
@@ -190,7 +190,7 @@ class UserController extends ApiController {
     $em->remove($aUser);
     $em->flush();
 
-    return $this->view(NULL, Codes::HTTP_NO_CONTENT);
+    return $this->view(NULL, Response::HTTP_NO_CONTENT);
   }
 
   /**
@@ -317,7 +317,7 @@ class UserController extends ApiController {
     }
     $em->flush();
 
-    return $this->view(NULL, Codes::HTTP_NO_CONTENT);
+    return $this->view(NULL, Response::HTTP_NO_CONTENT);
   }
 
   private function fetchUserGroupRoles(User $user, Group $group) {

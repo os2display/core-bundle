@@ -3,8 +3,8 @@
 namespace Os2Display\CoreBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Util\Codes;
-use JMS\Serializer\SerializationContext;
+use Symfony\Component\HttpFoundation\Response;
+use JMS\Serializer\Context;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -59,8 +59,8 @@ class ApiController extends FOSRestController {
    * @return \Symfony\Component\HttpFoundation\Response
    */
   protected function createCreatedResponse($data, array $headers = [], array $serializationGroups = ['api']) {
-    $view = $this->view($data, Codes::HTTP_CREATED);
-    $context = $view->getSerializationContext();
+    $view = $this->view($data, Response::HTTP_CREATED);
+    $context = $view->getContext();
     $context->setGroups($serializationGroups);
 
     return $this->handleView($view);

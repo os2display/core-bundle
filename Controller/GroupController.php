@@ -7,7 +7,7 @@
 namespace Os2Display\CoreBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpFoundation\Response;
 use Os2Display\CoreBundle\Entity\Group;
 use Os2Display\CoreBundle\Exception\DuplicateEntityException;
 use Os2Display\CoreBundle\Exception\HttpDataException;
@@ -62,14 +62,14 @@ class GroupController extends ApiController
             $group = $this->get('os2display.group_manager')->createGroup($data);
         } catch (ValidationException $e) {
             throw new HttpDataException(
-                Codes::HTTP_BAD_REQUEST,
+                Response::HTTP_BAD_REQUEST,
                 $data,
                 'Invalid data',
                 $e
             );
         } catch (DuplicateEntityException $e) {
             throw new HttpDataException(
-                Codes::HTTP_CONFLICT,
+                Response::HTTP_CONFLICT,
                 $data,
                 'Duplicate group',
                 $e
@@ -145,14 +145,14 @@ class GroupController extends ApiController
                 ->updateGroup($group, $data);
         } catch (ValidationException $e) {
             throw new HttpDataException(
-                Codes::HTTP_BAD_REQUEST,
+                Response::HTTP_BAD_REQUEST,
                 $data,
                 'Invalid data',
                 $e
             );
         } catch (DuplicateEntityException $e) {
             throw new HttpDataException(
-                Codes::HTTP_CONFLICT,
+                Response::HTTP_CONFLICT,
                 $data,
                 'Duplicate group',
                 $e
@@ -190,7 +190,7 @@ class GroupController extends ApiController
         $em->remove($group);
         $em->flush();
 
-        return $this->view(null, Codes::HTTP_NO_CONTENT);
+        return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
