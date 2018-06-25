@@ -73,7 +73,7 @@ class MediaController extends Controller {
       $media->setContext('default');
 
       // Set creator.
-      $userEntity = $this->get('security.context')->getToken()->getUser();
+      $userEntity = $this->get('security.token_storage')->getToken()->getUser();
       $media->setUser($userEntity->getId());
 
       $groups = json_decode($request->request->get('groups'));

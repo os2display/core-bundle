@@ -8,7 +8,7 @@ namespace Os2Display\CoreBundle\Services;
 
 use Os2Display\CoreBundle\Exception\ValidationException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\Validator\Validator\RecursiveValidator;
+use Symfony\Component\Validator\Validator\TraceableValidator;
 
 /**
  * Class EntityService
@@ -22,9 +22,9 @@ class EntityService {
   /**
    * EntityService constructor.
    *
-   * @param \Symfony\Component\Validator\Validator\RecursiveValidator $validator
+   * @param TraceableValidator $validator
    */
-  public function __construct(RecursiveValidator $validator) {
+  public function __construct(TraceableValidator $validator) {
     $this->accessor = PropertyAccess::createPropertyAccessor();
     $this->validator = $validator;
   }
