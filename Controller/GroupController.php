@@ -32,7 +32,7 @@ class GroupController extends ApiController
      * Lists all group entities.
      *
      * @Rest\Get("", name="api_group_index")
-     * @ ApiDoc(
+     * @ApiDoc(
      *   section="Groups",
      *   description="Get all groups",
      *   tags={"group"}
@@ -82,7 +82,7 @@ class GroupController extends ApiController
 
     /**
      * @Rest\Get("/roles")
-     * @ ApiDoc(
+     * @ApiDoc(
      *   section="Groups",
      *   description="Get all available group roles"
      * )

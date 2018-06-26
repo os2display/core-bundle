@@ -15,8 +15,7 @@ use Os2Display\CoreBundle\Entity\UserGroup;
 use Os2Display\CoreBundle\Exception\DuplicateEntityException;
 use Os2Display\CoreBundle\Exception\HttpDataException;
 use Os2Display\CoreBundle\Exception\ValidationException;
-use Os2Display\CoreBundle\Security\Roles;
-//use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +35,7 @@ class UserController extends ApiController {
    *   requirements="string",
    *   nullable=true
    * )
-   * @ ApiDoc(
+   * @ApiDoc(
    *   section="Users",
    *   description="Returns all users",
    *   resource=false,
@@ -67,7 +66,7 @@ class UserController extends ApiController {
    * Creates a new user entity.
    *
    * @Rest\Post("", name="api_user_new")
-   * @ ApiDoc(
+   * @ApiDoc(
    *   section="Users",
    *   description="Create user",
    *   statusCodes={
@@ -103,7 +102,7 @@ class UserController extends ApiController {
 
   /**
    * @Rest\Get("/roles")
-   * @ ApiDoc(
+   * @ApiDoc(
    *   section="Users and groups",
    *   description="Get all available user roles"
    * )
@@ -205,7 +204,7 @@ class UserController extends ApiController {
   /**
    * @Rest\Get("/{user}/group/{group}", name="api_user_group_read")
    *
-   * @ ApiDoc(
+   * @ApiDoc(
    *   section="Users and groups"
    * )
    * @param \Os2Display\CoreBundle\Entity\User $user
@@ -237,7 +236,7 @@ class UserController extends ApiController {
    *   requirements="string[]",
    *   nullable=true
    * )
-   * @ ApiDoc(
+   * @ApiDoc(
    *   section="Users and groups",
    *   description="Add user to group"
    * )
@@ -258,7 +257,7 @@ class UserController extends ApiController {
 
   /**
    * @Rest\Put("/{user}/group/{group}", name="api_user_group_update")
-   * @ ApiDoc(
+   * @ApiDoc(
    *   section="Users and groups",
    *   description="Update user's roles in group"
    * )
@@ -297,7 +296,7 @@ class UserController extends ApiController {
 
   /**
    * @Rest\Delete("/{user}/group/{group}")
-   * @ ApiDoc(
+   * @ApiDoc(
    *   section="Users and groups",
    *   description="Remove user from group"
    * )
