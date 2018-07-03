@@ -30,7 +30,7 @@ services:
 
   os2display.security_manager:
     class: Os2Display\CoreBundle\Services\SecurityManager
-    arguments: ['@security.token_storage', '@doctrine.orm.entity_manager', '@security.access.decision_manager', '@security.role_hierarchy']
+    arguments: ['@security.token_storage', '@doctrine.orm.entity_manager', '@security.access.decision_manager', '@security.role_hierarchy', '@event_dispatcher']
 
   os2display.api_data:
     class: Os2Display\CoreBundle\Services\ApiDataService
@@ -85,6 +85,11 @@ services:
   os2display.authentication_service:
     class: Os2Display\CoreBundle\Services\AuthenticationService
     arguments: ['@service_container']
+
+  os2display.core.subscriber.roles:
+    class: Os2Display\CoreBundle\EventListener\RolesSubscriber
+    tags:
+      - { name: kernel.event_subscriber }
 
   os2display.sharing_service:
     class: Os2Display\CoreBundle\Services\SharingService

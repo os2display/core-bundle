@@ -1,5 +1,16 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.1.0
+
+* Changed try/catch of FeedService to catch all exceptions.
+* Fixed issue where shared channel was not serialized correctly, resulting in a blocked screen-timeline overview.
+* Fixed behat features
+* Added viewable_groups to apiData.
+* Removed configuration call from base extension
+* Added cron controll route. Reformatted code
+* Fixed issue with slide template ikSlide.path variable.
+* Fixed zencoder job naming.
+
 ## 1.0.11
 
 * Merged PR: https://github.com/os2display/core-bundle/pull/5 allowing users to edit their own profile.

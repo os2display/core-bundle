@@ -178,6 +178,39 @@ class FeatureContext extends BaseContext implements Context, KernelAwareContext
     }
 
     /**
+     * @Given /^the following (?P<entityClass>.+) entities(?: identified by (?P<idColumn>.+))? exist:$/
+     *
+     * @param mixed $type
+     */
+    public function theFollowingEntitiesExist($entityClass, $idColumn = 'id', TableNode $table)
+    {
+        $entityClass = trim($entityClass, '\'"');
+        $idColumn = trim($idColumn, '\'"');
+        if (!class_exists($entityClass)) {
+            throw new \RuntimeException('Class '.$entityClass.' does not exist.');
+        }
+
+        $repository = $this->manager->getRepository($entityClass);
+        $accessor = $this->container->get('property_accessor');
+        foreach ($table->getHash() as $row) {
+            if ($row[$idColumn] && $repository->find($row[$idColumn]) !== null) {
+                continue;
+            }
+            $entity = new $entityClass();
+            foreach ($row as $path => $value) {
+                if ($path === $idColumn) {
+                    $property = new \ReflectionProperty(get_class($entity), $idColumn);
+                    $property->setAccessible(true);
+                    $property->setValue($entity, $value);
+                } else {
+                    $accessor->setValue($entity, $path, $value);
+                }
+            }
+            $this->persist($entity);
+        }
+    }
+
+    /**
      * @When I authenticate as :username
      *
      * @param mixed $username
@@ -459,5 +492,29 @@ class FeatureContext extends BaseContext implements Context, KernelAwareContext
     private function deauthenticate()
     {
         $this->container->get('security.token_storage')->setToken(null);
+    }
+
+    protected function persist($entity)
+    {
+        $metadata = null;
+        $idGenerator = null;
+        $idGeneratorType = null;
+        if ($entity->getId() !== null) {
+            // Remove id generator and set id manually.
+            $metadata = $this->manager->getClassMetadata(get_class($entity));
+            $idGenerator = $metadata->idGenerator;
+            $idGeneratorType = $metadata->generatorType;
+            $metadata->setIdGeneratorType($metadata::GENERATOR_TYPE_NONE);
+        }
+
+        $this->manager->persist($entity);
+        // We need to flush to force the id to be set.
+        $this->manager->flush();
+
+        // Restore id generator.
+        if ($metadata !== null) {
+            $metadata->setIdGenerator($idGenerator);
+            $metadata->setIdGeneratorType($idGeneratorType);
+        }
     }
 }

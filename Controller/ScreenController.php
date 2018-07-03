@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @Route("/api/screen")
  */
-class ScreenController extends Controller
+class ScreenController extends ApiController
 {
     /**
      * Generates a new unique activation code in the interval between 100000000 and 999999999.
@@ -249,6 +249,7 @@ class ScreenController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         if ($screen) {
+            $this->setApiData($screen);
             $serializer = $this->get('jms_serializer');
             $response->headers->set('Content-Type', 'application/json');
             $jsonContent = $serializer->serialize($screen, 'json', SerializationContext::create()
@@ -445,6 +446,7 @@ class ScreenController extends Controller
     {
         $manager = $this->get('os2display.entity_manager');
         $screenEntities = $manager->findAll(Screen::class);
+        $this->setApiData($screenEntities);
 
         // Create response.
         $response = new Response();

@@ -39,6 +39,41 @@ class EntityManagerService {
     return $repository->findBy($criteria, $orderBy, $limit, $offset);
   }
 
+  /**
+   * Convert list of entities, i.e.
+   *
+   *   - list of actual entities (with getId method),
+   *   - list of ids,
+   *   - list of objects/arrays with "id" key,
+   *
+   * into a list of proper entities of the specified type.
+   *
+   * @param array|\Doctrine\Common\Collections\ArrayCollection $entities
+   * @param string $entityClass
+   *
+   * @return array List of entities.
+   */
+  public function loadEntities($entities, $entityClass) {
+    $ids = [];
+    foreach ($entities as $entity) {
+      $id = null;
+      if (method_exists($entity, 'getId')) {
+        $id = $entity->getId();
+      } elseif (is_scalar($entity)) {
+        $id = $entity;
+      } elseif (isset($entity->id)) {
+        $id = $entity->id;
+      } elseif (isset($entity['id'])) {
+        $id = $entity['id'];
+      }
+      if ($id !== null) {
+        $ids[] = $id;
+      }
+    }
+
+    return $this->manager->getRepository($entityClass)->findBy(['id' => $ids]);
+  }
+
   private function addCriteria($class, array &$criteria = NULL) {
     if ($this->authorizationChecker->isGranted(Roles::ROLE_ADMIN)) {
       return;

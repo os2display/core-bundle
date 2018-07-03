@@ -24,7 +24,8 @@ Feature: admin
     And the response should be in JSON
     And the JSON node "id" should be equal to 1
 
-    When I send a "POST" request to "/api/user" with body:
+    When I add "Content-Type" header equal to "application/json"
+    And I send a "POST" request to "/api/user" with body:
       """
       {
         "email": "user@example.com",
@@ -36,7 +37,8 @@ Feature: admin
     And the response should be in JSON
     And the JSON node "id" should be equal to 2
 
-    When I send a "POST" request to "/api/user/2/group/1" with body:
+    When I add "Content-Type" header equal to "application/json"
+    And I send a "POST" request to "/api/user/2/group/1" with body:
       """
       {}
       """
@@ -44,7 +46,8 @@ Feature: admin
     And the response should be in JSON
     And the JSON node "roles" should have 0 elements
 
-    When I send a "POST" request to "/api/user/2/group/1" with body:
+    When I add "Content-Type" header equal to "application/json"
+    And I send a "POST" request to "/api/user/2/group/1" with body:
       """
       {
         "roles": ["ROLE_GROUP_ROLE_ADMIN"]

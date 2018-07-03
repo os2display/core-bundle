@@ -6,6 +6,7 @@
 
 namespace Os2Display\CoreBundle\Controller;
 
+use Os2Display\CoreBundle\Command\CronCommand;
 use Os2Display\CoreBundle\Command\PushContentCommand;
 use Os2Display\CoreBundle\Command\SearchCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,57 +23,80 @@ use Symfony\Component\Console\Output\NullOutput;
  *
  * @package Os2Display\CoreBundle\Controller
  */
-class AdminCommandController extends Controller {
-  /**
-   * Load templates.
-   *
-   * @Route("/update_templates")
-   * @Method("GET")
-   */
-  public function updateTemplates() {
-    $this->container->get('os2display.template_service')->loadTemplates();
+class AdminCommandController extends Controller
+{
+    /**
+     * Load templates.
+     *
+     * @Route("/update_templates")
+     * @Method("GET")
+     */
+    public function updateTemplates()
+    {
+        $this->container->get('os2display.template_service')->loadTemplates();
 
-    // @TODO: Handle errors.
+        // @TODO: Handle errors.
 
-    return new Response();
-  }
+        return new Response();
+    }
 
-  /**
-   * Reindex the search.
-   *
-   * @Route("/reindex")
-   * @Method("GET")
-   */
-  public function reindex() {
-    // Run the reindex command.
-    $command = new SearchCommand();
-    $command->setContainer($this->container);
-    $input = new ArrayInput(array());
-    $output = new NullOutput();
-    $command->run($input, $output);
+    /**
+     * Reindex the search.
+     *
+     * @Route("/reindex")
+     * @Method("GET")
+     */
+    public function reindex()
+    {
+        // Run the reindex command.
+        $command = new SearchCommand();
+        $command->setContainer($this->container);
+        $input = new ArrayInput(array());
+        $output = new NullOutput();
+        $command->run($input, $output);
 
-    // @TODO: Handle errors.
+        // @TODO: Handle errors.
 
-    return new Response();
-  }
+        return new Response();
+    }
 
+    /**
+     * Run cron
+     *
+     * @Route("/cron")
+     * @Method("GET")
+     */
+    public function cron()
+    {
+        // Run the cron command.
+        $command = new CronCommand();
+        $command->setContainer($this->container);
+        $input = new ArrayInput(array());
+        $output = new NullOutput();
+        $command->run($input, $output);
 
-  /**
-   * Force push.
-   *
-   * @Route("/forcepush")
-   * @Method("GET")
-   */
-  public function forcePush() {
-    // Run the reindex command.
-    $command = new PushContentCommand();
-    $command->setContainer($this->container);
-    $input = new ArrayInput(array('--force' => true));
-    $output = new NullOutput();
-    $command->run($input, $output);
+        // @TODO: Handle errors.
 
-    // @TODO: Handle errors.
+        return new Response();
+    }
 
-    return new Response();
-  }
+    /**
+     * Force push.
+     *
+     * @Route("/forcepush")
+     * @Method("GET")
+     */
+    public function forcePush()
+    {
+        // Run the reindex command.
+        $command = new PushContentCommand();
+        $command->setContainer($this->container);
+        $input = new ArrayInput(array('--force' => true));
+        $output = new NullOutput();
+        $command->run($input, $output);
+
+        // @TODO: Handle errors.
+
+        return new Response();
+    }
 }

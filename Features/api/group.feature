@@ -136,7 +136,7 @@ Feature: admin
       """
     Then the response status code should be 201
 
-    When I sign in with username "admin" and password "admin"
+    When I add "Content-Type" header equal to "application/json"
     And I send a "POST" request to "/api/group" with body:
       """
       {

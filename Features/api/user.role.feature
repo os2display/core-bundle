@@ -102,6 +102,7 @@ Feature: admin
     Then the response status code should be 400
 
     When I sign in with username "user-admin" and password "password"
+    And I add "Content-Type" header equal to "application/json"
     And I send a "PUT" request to "/api/user/4" with body:
       """
       {
