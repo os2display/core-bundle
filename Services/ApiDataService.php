@@ -9,6 +9,7 @@ use Os2Display\CoreBundle\Entity\Screen;
 use Os2Display\CoreBundle\Entity\Slide;
 use Os2Display\CoreBundle\Entity\User;
 use Os2Display\CoreBundle\Security\EditVoter;
+use Os2Display\CoreBundle\Security\Roles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
@@ -92,6 +93,7 @@ class ApiDataService {
           'can_create_channel' => $securityMananger->decide(EditVoter::CREATE, Channel::class),
           'can_create_slide' => $securityMananger->decide(EditVoter::CREATE, Slide::class),
           'can_create_screen' => $securityMananger->decide(EditVoter::CREATE, Screen::class),
+          'can_update_roles' => $securityMananger->decide(Roles::ROLE_USER_ADMIN),
         ];
       }
     }

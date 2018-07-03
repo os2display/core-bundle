@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.0.11
+
+* Merged PR: https://github.com/os2display/core-bundle/pull/5 allowing users to edit their own profile.
+
 ## 1.0.10
 
 * Fixed zencoder job naming.
