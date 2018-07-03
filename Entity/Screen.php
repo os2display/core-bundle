@@ -27,13 +27,13 @@ class Screen extends ApiEntity implements GroupableEntity
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "api-bulk", "search", "screen", "timeline-screen"})
+     * @Groups({"api", "api-bulk", "search", "screen", "timeline-screen", "campaign"})
      */
     private $id;
 
     /**
      * @ORM\Column(name="title", type="text", nullable=false)
-     * @Groups({"api", "api-bulk", "search", "screen", "timeline-screen"})
+     * @Groups({"api", "api-bulk", "search", "screen", "timeline-screen", "campaign"})
      */
     private $title;
 
