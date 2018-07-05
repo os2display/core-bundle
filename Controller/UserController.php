@@ -230,12 +230,6 @@ class UserController extends ApiController {
   /**
    * @Rest\Post("/{user}/group/{group}", name="api_user_group_create")
    *
-   * @Rest\RequestParam(
-   *   name="roles",
-   *   description="Roles to give user in group.",
-   *   requirements="string[]",
-   *   nullable=true
-   * )
    * @ApiDoc(
    *   section="Users and groups",
    *   description="Add user to group"
