@@ -130,3 +130,8 @@ services:
     arguments: ['sonata.media.provider.zencoder', '@sonata.media.filesystem.local', '@sonata.media.cdn.server', '@sonata.media.generator.default', '@sonata.media.thumbnail.format', '%absolute_path_to_server%', '%zencoder_api%', '@logger']
     calls:
       - [setTemplates, [{ helper_thumbnail: 'SonataMediaBundle:Provider:thumbnail.html.twig', helper_view: 'SonataMediaBundle:Provider:view_video.html.twig' }]]
+
+  os2display.middleware.service:
+    class: Os2Display\CoreBundle\Services\MiddlewareService
+    arguments: ['@doctrine.orm.entity_manager', '@jms_serializer']
+    public: true
