@@ -30,14 +30,18 @@ class MiddlewareService
         $data = $this->serializer->serialize($screen, 'json', SerializationContext::create()
             ->setGroups(array('middleware')));
 
-        return json_decode($data);
+        $data = json_decode($data);
+
+        return $data;
     }
 
     public function getChannelArray($channel) {
         $data = $this->serializer->serialize($channel, 'json', SerializationContext::create()
             ->setGroups(array('middleware')));
 
-        return json_decode($data);
+        $data = json_decode($data);
+
+        return $data;
     }
 
     public function getCurrentScreenArray($screenId) {
@@ -68,6 +72,9 @@ class MiddlewareService
             else {
                 $result->channels[$channelId]->regions[] = $region;
             }
+
+            // Hash the the channel object to avoid unnecessary updates in the frontend.
+            $result->channels[$channelId]->hash = sha1(json_encode($result->channels[$channelId]));
         }
 
         return $result;
