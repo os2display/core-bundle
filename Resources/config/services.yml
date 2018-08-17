@@ -2,6 +2,11 @@ parameters:
   router.options.generator_base_class: Os2Display\CoreBundle\Routing\HashtagDecodedUrlGenerator
 
 services:
+  os2display.core.cache:
+    class: Doctrine\Common\Cache\FilesystemCache
+    arguments: ['%kernel.cache_dir%']
+    public: true
+
   os2display.listener:
     class: Os2Display\CoreBundle\EventListener\SearchIndexer
     arguments: ['@jms_serializer', '@service_container', '@os2display.utility_service']
@@ -133,5 +138,5 @@ services:
 
   os2display.middleware.service:
     class: Os2Display\CoreBundle\Services\MiddlewareService
-    arguments: ['@doctrine.orm.entity_manager', '@jms_serializer']
+    arguments: ['@doctrine.orm.entity_manager', '@jms_serializer', '@os2display.core.cache', 300]
     public: true

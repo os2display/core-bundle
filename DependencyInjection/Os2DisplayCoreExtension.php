@@ -19,5 +19,13 @@ class Os2DisplayCoreExtension extends Os2DisplayBaseExtension {
     $this->dir = __DIR__;
 
     parent::load($configs, $container);
+
+    $configuration = new Configuration();
+    $config = $this->processConfiguration($configuration, $configs);
+    $def = $container->getDefinition('os2display.middleware.service');
+
+    if (isset($config['cache_ttl'])) {
+        $def->replaceArgument(3, $config['cache_ttl']);
+    }
   }
 }
