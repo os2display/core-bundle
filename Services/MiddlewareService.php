@@ -44,6 +44,15 @@ class MiddlewareService
         return $data;
     }
 
+    public function getSharedChannelArray($channel) {
+        $data = $this->serializer->serialize($channel, 'json', SerializationContext::create()
+            ->setGroups(array('middleware')));
+
+        $data = json_decode($data);
+
+        return $data;
+    }
+
     public function getCurrentScreenArray($screenId) {
         $screenRepository = $this->entityManager->getRepository('Os2DisplayCoreBundle:Screen');
 
@@ -55,15 +64,25 @@ class MiddlewareService
             'screen' => $screenArray,
         ];
 
-        // @TODO: Handles shared channels.
         foreach ($screen->getChannelScreenRegions() as $channelScreenRegion) {
             $channel = $channelScreenRegion->getChannel();
             $region = $channelScreenRegion->getRegion();
-            $channelId = $channel->getId();
+            $channelId = null;
+            $data = null;
+
+            if (!is_null($channel)) {
+                $channelId = $channel->getId();
+                $data = $this->getChannelArray($channel);
+            }
+            else {
+                // Handle shared channels.
+                $channel = $channelScreenRegion->getSharedChannel();
+                $channelId = $channel->getUniqueId();
+                $data = $this->getSharedChannelArray($channel);
+                $data->data->slides = json_decode($data->data->slides);
+            }
 
             if (!isset($result->channels[$channelId])) {
-                $data = $this->getChannelArray($channel);
-
                 $result->channels[$channelId] = (object) [
                     'data' => $data->data,
                     'regions' => [$region],
