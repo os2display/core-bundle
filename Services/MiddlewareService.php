@@ -8,6 +8,7 @@ use Os2Display\CoreBundle\Entity\Channel;
 use Os2Display\CoreBundle\Entity\Screen;
 use JMS\Serializer\SerializationContext;
 use Doctrine\Common\Cache\CacheProvider;
+use Os2Display\CoreBundle\Entity\ScreenTemplate;
 
 class MiddlewareService
 {
@@ -83,6 +84,42 @@ class MiddlewareService
         return $data;
     }
 
+    public function getCurrentChannelArray($channelId) {
+        $cachedResult = $this->cache->fetch('os2display.core.channel.' . $channelId);
+
+        if ($cachedResult != false) {
+            return $cachedResult;
+        }
+
+        $channelRepository = $this->entityManager->getRepository(Channel::class);
+
+        $channel = $channelRepository->findOneById($channelId);
+        $channelArray = $this->getChannelArray($channel);
+
+        $channelArray->regions = [1];
+
+        // Use full-screen screen template.
+        $templateRepository = $this->entityManager->getRepository(ScreenTemplate::class);
+        $templateArray = json_decode($this->serializer->serialize(
+            $templateRepository->findOneById('full-screen'),
+            'json',
+            SerializationContext::create()
+                ->setGroups(array('middleware'))
+        ));
+
+        $result = (object)[
+            'channels' => [$channelArray],
+            'screen' => [
+                'id' => 1,
+                'title' => 'channel-public',
+                'options' => [],
+                'template' => $templateArray,
+            ],
+        ];
+
+        return $result;
+    }
+
     public function getCurrentScreenArray($screenId)
     {
         $cachedResult = $this->cache->fetch('os2display.core.screen.' . $screenId);
@@ -91,9 +128,7 @@ class MiddlewareService
             return $cachedResult;
         }
 
-        $screenRepository = $this->entityManager->getRepository(
-            'Os2DisplayCoreBundle:Screen'
-        );
+        $screenRepository = $this->entityManager->getRepository(Screen::class);
 
         $screen = $screenRepository->findOneById($screenId);
         $screenArray = $this->getScreenArray($screen);
