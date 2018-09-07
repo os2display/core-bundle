@@ -25,33 +25,33 @@ class SharingIndex
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api", "channel"})
      */
     private $id;
 
     /**
      * @ORM\Column(name="name", type="text", nullable=false)
-     * @Groups({"api"})
+     * @Groups({"api", "channel"})
      */
     private $name;
 
     /**
      * @ORM\Column(name="`index`", type="text", nullable=false)
-     * @Groups({"api"})
+     * @Groups({"api", "channel"})
      */
     private $index;
 
     /**
      * @ORM\ManyToMany(targetEntity="Channel", inversedBy="sharingIndexes")
      * @ORM\JoinTable(name="ik_sharing_indexes_channels")
-     * @Groups({"api"})
+     * @Groups({"api", "channel"})
      * @MaxDepth(3)
      */
     private $channels;
 
     /**
      * @ORM\Column(name="enabled", type="boolean", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "channel"})
      */
     private $enabled;
 

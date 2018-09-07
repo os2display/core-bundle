@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.1.3
+
+* Fixed missing sharing index serialization.
+
 ## 1.1.2
 
 * Changed try/catch of FeedService to catch all exceptions.
