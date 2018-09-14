@@ -83,7 +83,7 @@ class Os2DisplayBaseExtension extends Extension
                 $container->getParameter('external_bootstrap') : [];
             if (array_key_exists('bootstrap', $angular) && is_array($angular['bootstrap'])) {
                 foreach ($angular['bootstrap'] as $key => $module) {
-                    if (!in_array($key, $bootstrap)) {
+                    if (!array_key_exists($key, $bootstrap)) {
                         $bootstrap[$key] = $module;
                     } else {
                         $bootstrap[$key] = array_merge_recursive(
