@@ -391,9 +391,6 @@ class Channel extends ApiEntity implements GroupableEntity
             $slide = $slideOrder->getSlide();
 
             if (is_null($slide)) {
-                $logger = $this->getContainer()->get('os2display.core.channel');
-                $logger->error('Os2Display\CoreBundle\Entity\Channel: Missing slide for channel, continuing: ' . $this->getId());
-
                 continue;
             }
 
