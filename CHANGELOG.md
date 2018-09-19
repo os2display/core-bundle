@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## hotfix/support-1764-continue-on-missing-slides
+
+* Added is_null check for slides in channel.getPublishedSlides().
+
 ## 1.1.3
 
 * Fixed missing sharing index serialization.
