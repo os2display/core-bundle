@@ -1,6 +1,6 @@
 # Os2Display/CoreBundle CHANGELOG
 
-## hotfix/support-1764-continue-on-missing-slides
+## 1.1.4
 
 * Added is_null check for slides in channel.getPublishedSlides().
 
