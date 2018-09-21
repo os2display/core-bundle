@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.1.4
+
+* Added is_null check for slides in channel.getPublishedSlides().
+
 ## 1.1.3
 
 * Fixed missing sharing index serialization.
