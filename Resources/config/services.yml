@@ -72,6 +72,11 @@ services:
     tags:
       -  { name: console.command }
 
+  os2display.core.cleanup_service:
+    class: Os2Display\CoreBundle\Services\CleanupService
+    arguments: ['@doctrine.orm.entity_manager']
+    public: true
+
   os2display.template_service:
     class: Os2Display\CoreBundle\Services\TemplateService
     arguments: ['@service_container']
