@@ -41,7 +41,7 @@ class CleanupService {
 
     if (!is_null($threshold)) {
       $query->andWhere('entity.updatedAt < :threshold')
-        ->setParameter('threshold', $threshold);
+        ->setParameter('threshold', \DateTime::createFromFormat('U', $threshold));
     }
 
     return $query->getQuery()->getResult();
