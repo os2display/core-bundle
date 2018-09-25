@@ -36,7 +36,8 @@ class CleanupService {
 
     $query = $qb->select('entity')
       ->from(Media::class, 'entity')
-      ->where('entity.mediaOrders is empty');
+      ->where('entity.mediaOrders is empty')
+      ->andWhere('entity.logoSlides is empty');
 
     if (!is_null($threshold)) {
       $query->andWhere('entity.updatedAt < :threshold')
