@@ -81,8 +81,13 @@ class ChannelController extends Controller
         foreach ($channel->getChannelSlideOrders() as $channel_slide_order) {
             $slide = $channel_slide_order->getSlide();
 
-            if (!in_array($slide->getId(), $post_slide_ids)) {
-                $channel->removeChannelSlideOrder($channel_slide_order);
+            if (is_null($slide)) {
+              $logger = $this->get('logger');
+              $logger->warning('ChannelSlideOrder with id: ' . $channel_slide_order->getId() . ' has null slide. Removing.');
+            }
+
+            if (is_null($slide) || !in_array($slide->getId(), $post_slide_ids)) {
+              $channel->removeChannelSlideOrder($channel_slide_order);
             }
         }
 
