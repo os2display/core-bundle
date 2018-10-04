@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.1.5
+
+* Removed broken slide references.
+
 ## 1.1.4
 
 * Added is_null check for slides in channel.getPublishedSlides().
