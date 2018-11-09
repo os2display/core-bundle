@@ -120,6 +120,14 @@ class CleanupCommand extends ContainerAwareCommand {
     // Deleting Channels
     $channelList = $cleanupService->findChannelsToDelete($timestampThreshold);
     if (count($channelList) > 0) {
+      $output->writeln('This will delete the following channels: ');
+
+      foreach ($channelList as $channel) {
+        $output->writeln($channel->getTitle());
+      }
+
+      $output->writeln('');
+
       $confirm = $io->confirm('This will delete ' . count($channelList) . ' channels. Do you wish to continue?', false);
       if (!$confirm) {
         $output->writeln('Cleanup cancelled!');
@@ -135,8 +143,18 @@ class CleanupCommand extends ContainerAwareCommand {
 
     // Deleting Slides
     $slideList = $cleanupService->findSlidesToDelete($timestampThreshold);
+
     if (count($slideList) > 0) {
+      $output->writeln('This will delete the following slides: ');
+
+      foreach ($slideList as $slide) {
+        $output->writeln($slide->getTitle());
+      }
+
+      $output->writeln('');
+
       $confirm = $io->confirm('This will delete ' . count($slideList) . ' slides. Do you wish to continue?', false);
+
       if (!$confirm) {
         $output->writeln('Cleanup cancelled!');
         return;
@@ -152,6 +170,14 @@ class CleanupCommand extends ContainerAwareCommand {
     // Deleting Media
     $mediaList = $cleanupService->findMediaToDelete($timestampThreshold);
     if (count($mediaList) > 0) {
+      $output->writeln('This will delete the following media: ');
+
+      foreach ($mediaList as $media) {
+        $output->writeln($media->getName());
+      }
+
+      $output->writeln('');
+
       $confirm = $io->confirm('This will delete ' . count($mediaList) . ' media. Do you wish to continue?', false);
       if (!$confirm) {
         $output->writeln('Cleanup cancelled!');
