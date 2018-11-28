@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.2.0
+
+* Added os2display:core:cleanup command to remove unused content from an installation.
+
 ## 1.1.5
 
 * Removed broken slide references.
