@@ -3,9 +3,11 @@
 namespace Os2Display\CoreBundle\Services;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Os2Display\CoreBundle\Events\CleanupEvent;
 use Os2Display\MediaBundle\Entity\Media;
 use Os2Display\CoreBundle\Entity\Slide;
 use Os2Display\CoreBundle\Entity\Channel;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class CleanupService
@@ -15,12 +17,14 @@ use Os2Display\CoreBundle\Entity\Channel;
 class CleanupService {
   protected $entityManager;
   protected $mediaRepository;
+  protected $dispatcher;
 
   /**
    * CleanupService constructor.
    */
-  public function __construct(EntityManagerInterface $entityManager) {
+  public function __construct(EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher) {
     $this->entityManager = $entityManager;
+    $this->dispatcher = $dispatcher;
     $this->mediaRepository = $entityManager->getRepository(Media::class);
   }
 
@@ -88,7 +92,14 @@ class CleanupService {
         ->setParameter('threshold', $threshold);
     }
 
-    return $query->getQuery()->getResult();
+    $results = $query->getQuery()->getResult();
+
+    // Emit event to other bundles able to protect channels that should not be deleted.
+    $event = new CleanupEvent($results);
+    $event = $this->dispatcher->dispatch(CleanupEvent::EVENT_CLEANUP_CHANNELS, $event);
+    $results = $event->getEntities();
+
+    return $results;
   }
 
   public function deleteEntity($entity) {

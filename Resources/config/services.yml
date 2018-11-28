@@ -74,7 +74,7 @@ services:
 
   os2display.core.cleanup_service:
     class: Os2Display\CoreBundle\Services\CleanupService
-    arguments: ['@doctrine.orm.entity_manager']
+    arguments: ['@doctrine.orm.entity_manager', '@event_dispatcher']
     public: true
 
   os2display.template_service:
