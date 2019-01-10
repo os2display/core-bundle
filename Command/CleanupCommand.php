@@ -123,7 +123,7 @@ class CleanupCommand extends ContainerAwareCommand {
       $output->writeln('This will delete the following channels: ');
 
       foreach ($channelList as $channel) {
-        $output->writeln($channel->getTitle());
+        $output->writeln($channel->getId() . " - " . $channel->getTitle());
       }
 
       $output->writeln('');
@@ -148,7 +148,7 @@ class CleanupCommand extends ContainerAwareCommand {
       $output->writeln('This will delete the following slides: ');
 
       foreach ($slideList as $slide) {
-        $output->writeln($slide->getTitle());
+        $output->writeln($slide->getId() . " - " . $slide->getTitle());
       }
 
       $output->writeln('');
@@ -173,7 +173,7 @@ class CleanupCommand extends ContainerAwareCommand {
       $output->writeln('This will delete the following media: ');
 
       foreach ($mediaList as $media) {
-        $output->writeln($media->getName());
+        $output->writeln($media->getId() . " - " .$media->getName());
       }
 
       $output->writeln('');
