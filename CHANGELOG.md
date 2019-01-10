@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.2.1
+
+* Added id to list over entities to delete with cleanup command.
+
 ## 1.2.0
 
 * Added os2display:core:cleanup command to remove unused content from an installation.
