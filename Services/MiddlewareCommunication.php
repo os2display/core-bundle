@@ -83,6 +83,7 @@ class MiddlewareCommunication
     private function getScreenIdsFromData($data)
     {
         $decoded = json_decode($data);
+
         return $decoded->screens;
     }
 
@@ -254,7 +255,10 @@ class MiddlewareCommunication
 
         // Notify that Push Channel process has started.
         $event = new PrePushChannelsEvent($activeChannels);
-        $this->dispatcher->dispatch(PrePushChannelsEvent::EVENT_PRE_PUSH_CHANNELS, $event);
+        $this->dispatcher->dispatch(
+            PrePushChannelsEvent::EVENT_PRE_PUSH_CHANNELS,
+            $event
+        );
 
         foreach ($activeChannels as $channel) {
             $idsInBackend[] = $channel->getId();
@@ -270,7 +274,10 @@ class MiddlewareCommunication
 
             // Notify that Push Channel process has started.
             $event = new PrePushChannelEvent($channel, $data);
-            $event = $this->dispatcher->dispatch(PrePushChannelEvent::EVENT_PRE_PUSH_CHANNEL, $event);
+            $event = $this->dispatcher->dispatch(
+                PrePushChannelEvent::EVENT_PRE_PUSH_CHANNEL,
+                $event
+            );
 
             // Set modified values.
             $data = $event->getData();
@@ -307,7 +314,10 @@ class MiddlewareCommunication
             }
 
             // Notify that Push Channel process has started.
-            $event = $this->dispatcher->dispatch(PrePushChannelEvent::EVENT_PRE_PUSH_CHANNEL, new PrePushChannelEvent($sharedChannel, $data));
+            $event = $this->dispatcher->dispatch(
+                PrePushChannelEvent::EVENT_PRE_PUSH_CHANNEL,
+                new PrePushChannelEvent($sharedChannel, $data)
+            );
 
             // Set modified values.
             $data = $event->getData();
@@ -347,7 +357,10 @@ class MiddlewareCommunication
         }
 
         // Notify that Push Channel process has ended.
-        $this->dispatcher->dispatch(PostPushChannelsEvent::EVENT_POST_PUSH_CHANNELS, new PostPushChannelsEvent());
+        $this->dispatcher->dispatch(
+            PostPushChannelsEvent::EVENT_POST_PUSH_CHANNELS,
+            new PostPushChannelsEvent()
+        );
     }
 
     /**
