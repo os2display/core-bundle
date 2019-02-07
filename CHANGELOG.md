@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## In develop
+
+* Changed MiddlewareCommunications to be event based, and moved improvements from CampaignBundle into CoreBundle.
+
 ## 1.2.1
 
 * Added id to list over entities to delete with cleanup command.

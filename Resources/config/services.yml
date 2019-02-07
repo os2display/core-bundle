@@ -111,7 +111,7 @@ services:
 
   os2display.middleware.communication:
     class: Os2Display\CoreBundle\Services\MiddlewareCommunication
-    arguments: ['@service_container', '@os2display.template_service', '@os2display.utility_service']
+    arguments: ['@service_container', '@os2display.utility_service', '@event_dispatcher']
     tags:
       - { name: kernel.event_listener, event: ik.cron, method: onCron, priority: 1 }
 
