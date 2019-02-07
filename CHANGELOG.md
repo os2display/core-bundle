@@ -1,6 +1,6 @@
 # Os2Display/CoreBundle CHANGELOG
 
-## In develop
+## 1.3.0
 
 * Changed MiddlewareCommunications to be event based, and moved improvements from CampaignBundle into CoreBundle.
 
