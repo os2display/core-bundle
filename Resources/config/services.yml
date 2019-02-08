@@ -72,6 +72,11 @@ services:
     tags:
       -  { name: console.command }
 
+  os2display.core.cleanup_service:
+    class: Os2Display\CoreBundle\Services\CleanupService
+    arguments: ['@doctrine.orm.entity_manager', '@event_dispatcher']
+    public: true
+
   os2display.template_service:
     class: Os2Display\CoreBundle\Services\TemplateService
     arguments: ['@service_container']
@@ -106,7 +111,7 @@ services:
 
   os2display.middleware.communication:
     class: Os2Display\CoreBundle\Services\MiddlewareCommunication
-    arguments: ['@service_container', '@os2display.template_service', '@os2display.utility_service']
+    arguments: ['@service_container', '@os2display.utility_service', '@event_dispatcher']
     tags:
       - { name: kernel.event_listener, event: ik.cron, method: onCron, priority: 1 }
 

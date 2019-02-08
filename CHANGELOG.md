@@ -1,5 +1,14 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 1.2.0
+
+* Changed MiddlewareCommunications to be event based, and moved improvements from CampaignBundle into CoreBundle.
+* Added id to list over entities to delete with cleanup command.
+* Added os2display:core:cleanup command to remove unused content from an installation.
+* Removed broken slide references.
+* Added is_null check for slides in channel.getPublishedSlides().
+* Fixed missing sharing index serialization.
+
 ## 1.1.0
 
 * Changed try/catch of FeedService to catch all exceptions.
