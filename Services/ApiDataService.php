@@ -101,6 +101,7 @@ class ApiDataService {
           'can_create_channel' => $securityMananger->decide(EditVoter::CREATE, Channel::class),
           'can_create_slide' => $securityMananger->decide(EditVoter::CREATE, Slide::class),
           'can_create_screen' => $securityMananger->decide(EditVoter::CREATE, Screen::class),
+          'can_update_roles' => $securityMananger->decide(Roles::ROLE_USER_ADMIN),
         ];
       }
     }
