@@ -389,6 +389,11 @@ class Channel extends ApiEntity implements GroupableEntity
         $slideOrders = $this->getChannelSlideOrders()->matching($criteria);
         foreach ($slideOrders as $slideOrder) {
             $slide = $slideOrder->getSlide();
+
+            if (is_null($slide)) {
+                continue;
+            }
+
             if ($slide->isSlideActive()) {
                 $result->add($slide);
             }
