@@ -85,11 +85,6 @@ services:
     arguments: ['@doctrine.orm.entity_manager', '@event_dispatcher']
     public: true
 
-  os2display.core.cleanup_service:
-    class: Os2Display\CoreBundle\Services\CleanupService
-    arguments: ['@doctrine.orm.entity_manager', '@event_dispatcher']
-    public: true
-
   os2display.template_service:
     class: Os2Display\CoreBundle\Services\TemplateService
     arguments: ['@service_container']
@@ -105,11 +100,6 @@ services:
     class: Os2Display\CoreBundle\Services\AuthenticationService
     arguments: ['@service_container']
     public: true
-
-  os2display.core.subscriber.roles:
-    class: Os2Display\CoreBundle\EventListener\RolesSubscriber
-    tags:
-      - { name: kernel.event_subscriber }
 
   os2display.core.subscriber.roles:
     class: Os2Display\CoreBundle\EventListener\RolesSubscriber
