@@ -8,6 +8,7 @@ namespace Os2Display\CoreBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Os2Display\CoreBundle\Entity\Group;
 use Os2Display\CoreBundle\Entity\User;
@@ -25,6 +26,17 @@ use Symfony\Component\HttpFoundation\Request;
  * @Rest\View(serializerGroups={"api"})
  */
 class UserController extends ApiController {
+  /**
+   * @Rest\Get("/current")
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function getCurrentUser() {
+    $user = $this->getUser();
+    $user->buildRoleGroups();
+
+    return $this->setApiData($user);
+  }
+
   /**
    * Lists all user entities.
    *
