@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 2.0.0
+
+* Symfony 3.4 upgrade.
+
 ## 1.2.0
 
 * Changed MiddlewareCommunications to be event based, and moved improvements from CampaignBundle into CoreBundle.

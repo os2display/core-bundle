@@ -57,7 +57,7 @@ class ChannelController extends Controller
             $channel->setCreatedAt(time());
 
             // Set creator.
-            $userEntity = $this->get('security.context')->getToken()->getUser();
+            $userEntity = $this->get('security.token_storage')->getToken()->getUser();
             $channel->setUser($userEntity->getId());
         }
 

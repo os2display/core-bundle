@@ -56,7 +56,7 @@ class SlideController extends Controller
             $slide->setCreatedAt(time());
 
             // Set creator.
-            $userEntity = $this->get('security.context')->getToken()->getUser();
+            $userEntity = $this->get('security.token_storage')->getToken()->getUser();
             $slide->setUser($userEntity->getId());
         }
 

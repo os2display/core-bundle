@@ -73,12 +73,16 @@ class MediaController extends Controller {
       $media->setContext('default');
 
       // Set creator.
-      $userEntity = $this->get('security.context')->getToken()->getUser();
+      $userEntity = $this->get('security.token_storage')->getToken()->getUser();
       $media->setUser($userEntity->getId());
 
       $groups = json_decode($request->request->get('groups'));
       $groups = new ArrayCollection($groups ?: []);
       $media->setGroups($groups);
+
+      $media_sizes = getimagesize($file->getPathname());
+      $media->setWidth($media_sizes[0]);
+      $media->setHeight($media_sizes[1]);
 
       $mediaManager = $this->get('sonata.media.manager.media');
       $mediaManager->save($media);

@@ -3,8 +3,8 @@
 namespace Os2Display\CoreBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Util\Codes;
-use JMS\Serializer\SerializationContext;
+use Symfony\Component\HttpFoundation\Response;
+use JMS\Serializer\Context;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,37 +30,14 @@ class ApiController extends FOSRestController {
   }
 
   /**
-   * Create a JSON response with serialized data.
-   *
-   * @param $data
-   * @param int $status
-   * @param array $headers
-   * @param array $serializationGroups
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
-   */
-  protected function json($data, $status = 200, array $headers = [], array $serializationGroups = ['api']) {
-    $response = new JsonResponse(NULL, $status, $headers);
-
-    $serializer = $this->get('serializer');
-    $context = SerializationContext::create()->enableMaxDepthChecks();
-    if ($serializationGroups) {
-      $context->setGroups($serializationGroups);
-    }
-    $content = $serializer->serialize($data, 'json', $context);
-    $response->setContent($content);
-
-    return $response;
-  }
-
-  /**
    * @param $data
    * @param array $headers
    * @param array $serializationGroups
    * @return \Symfony\Component\HttpFoundation\Response
    */
   protected function createCreatedResponse($data, array $headers = [], array $serializationGroups = ['api']) {
-    $view = $this->view($data, Codes::HTTP_CREATED);
-    $context = $view->getSerializationContext();
+    $view = $this->view($data, Response::HTTP_CREATED);
+    $context = $view->getContext();
     $context->setGroups($serializationGroups);
 
     return $this->handleView($view);
