@@ -13,10 +13,12 @@ services:
   os2display.entity_service:
     class: Os2Display\CoreBundle\Services\EntityService
     arguments: ['@validator']
+    public: true
 
   os2display.group_manager:
     class: Os2Display\CoreBundle\Services\GroupManager
     arguments: ['@doctrine.orm.entity_manager', '@os2display.entity_service', '@service_container']
+    public: true
 
   os2display.grouping_listener:
     class: Os2Display\CoreBundle\EventListener\GroupingListener
@@ -27,14 +29,17 @@ services:
   os2display.user_manager:
     class: Os2Display\CoreBundle\Services\UserManager
     arguments: ['@fos_user.user_manager', '@os2display.user_mailer_service', '@os2display.entity_service', '@fos_user.util.token_generator', '@os2display.security_manager']
+    public: true
 
   os2display.security_manager:
     class: Os2Display\CoreBundle\Services\SecurityManager
     arguments: ['@security.token_storage', '@doctrine.orm.entity_manager', '@security.access.decision_manager', '@security.role_hierarchy', '@event_dispatcher']
+    public: true
 
   os2display.api_data:
     class: Os2Display\CoreBundle\Services\ApiDataService
-    arguments: ['@service_container']
+    arguments: ['@service_container', '@security.role_hierarchy']
+    public: true
 
   os2display.user_mailer_service:
     class: Os2Display\CoreBundle\Services\UserMailerService
@@ -44,6 +49,7 @@ services:
   os2display.entity_manager:
     class: Os2Display\CoreBundle\Services\EntityManagerService
     arguments: ['@doctrine.orm.entity_manager', '@security.token_storage', '@security.authorization_checker']
+    public: true
 
   os2display.edit_voter:
     class: Os2Display\CoreBundle\Security\EditVoter
@@ -60,6 +66,7 @@ services:
 
   os2display.api_authentication_service:
     class: Os2Display\CoreBundle\Security\ApiAuthenticationEntryPoint
+    public: true
 
   os2display.serialization_listener:
     class: Os2Display\CoreBundle\EventListener\SerializationListener
@@ -71,6 +78,7 @@ services:
     class: Os2Display\CoreBundle\Command\PushContentCommand
     tags:
       -  { name: console.command }
+    public: true
 
   os2display.core.cleanup_service:
     class: Os2Display\CoreBundle\Services\CleanupService
@@ -80,6 +88,7 @@ services:
   os2display.template_service:
     class: Os2Display\CoreBundle\Services\TemplateService
     arguments: ['@service_container']
+    public: true
 
   os2display.feed_service:
     class: Os2Display\CoreBundle\Services\FeedService
@@ -90,6 +99,7 @@ services:
   os2display.authentication_service:
     class: Os2Display\CoreBundle\Services\AuthenticationService
     arguments: ['@service_container']
+    public: true
 
   os2display.core.subscriber.roles:
     class: Os2Display\CoreBundle\EventListener\RolesSubscriber
@@ -104,16 +114,19 @@ services:
       - { name: kernel.event_listener, event: os2display.core.sharing_service.remove_channel_from_index, method: onRemoveChannelFromIndex }
       - { name: kernel.event_listener, event: os2display.core.sharing_service.update_channel, method: onUpdateChannel }
       - { name: kernel.event_listener, event: ik.cron, method: onCron }
+    public: true
 
   os2display.utility_service:
     class: Os2Display\CoreBundle\Services\UtilityService
     arguments: ['@os2display.authentication_service']
+    public: true
 
   os2display.middleware.communication:
     class: Os2Display\CoreBundle\Services\MiddlewareCommunication
     arguments: ['@service_container', '@os2display.utility_service', '@event_dispatcher']
     tags:
       - { name: kernel.event_listener, event: ik.cron, method: onCron, priority: 1 }
+    public: true
 
   sonata.media.provider.zencoder:
     class: Os2Display\CoreBundle\Provider\ZencoderProvider

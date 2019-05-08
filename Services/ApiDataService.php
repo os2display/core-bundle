@@ -14,12 +14,15 @@ use Os2Display\CoreBundle\Security\EditVoter;
 use Os2Display\CoreBundle\Security\Roles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 class ApiDataService {
   protected $container;
+  protected $roleHierarchy;
 
-  public function __construct(ContainerInterface $container) {
+  public function __construct(ContainerInterface $container, RoleHierarchy $roleHierarchy) {
     $this->container = $container;
+    $this->roleHierarchy = $roleHierarchy;
   }
 
   /**
@@ -101,13 +104,14 @@ class ApiDataService {
           'can_create_channel' => $securityMananger->decide(EditVoter::CREATE, Channel::class),
           'can_create_slide' => $securityMananger->decide(EditVoter::CREATE, Slide::class),
           'can_create_screen' => $securityMananger->decide(EditVoter::CREATE, Screen::class),
+          'can_update_roles' => $securityMananger->decide(Roles::ROLE_USER_ADMIN),
         ];
       }
     }
     $userRoles = array_map(function ($role) {
       return new Role($role);
     }, $user->getRoles(FALSE));
-    $roles = $this->container->get('security.role_hierarchy')->getReachableRoles($userRoles);
+    $roles = $this->roleHierarchy->getReachableRoles($userRoles);
     $roles = array_unique(array_map(function (Role $role) { return $role->getRole(); }, $roles));
 
     $apiData = [

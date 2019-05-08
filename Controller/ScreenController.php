@@ -81,7 +81,7 @@ class ScreenController extends ApiController
             $screen->setCreatedAt(time());
 
             // Set creator.
-            $userEntity = $this->get('security.context')->getToken()->getUser();
+            $userEntity = $this->get('security.token_storage')->getToken()->getUser();
             $screen->setUser($userEntity->getId());
         }
 
