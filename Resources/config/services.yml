@@ -2,6 +2,11 @@ parameters:
   router.options.generator_base_class: Os2Display\CoreBundle\Routing\HashtagDecodedUrlGenerator
 
 services:
+  os2display.core.cache:
+    class: Doctrine\Common\Cache\FilesystemCache
+    arguments: ['%kernel.cache_dir%']
+    public: true
+
   os2display.listener:
     class: Os2Display\CoreBundle\EventListener\SearchIndexer
     arguments: ['@jms_serializer', '@service_container', '@os2display.utility_service']
@@ -135,3 +140,8 @@ services:
     arguments: ['sonata.media.provider.zencoder', '@sonata.media.filesystem.local', '@sonata.media.cdn.server', '@sonata.media.generator.default', '@sonata.media.thumbnail.format', '%absolute_path_to_server%', '%zencoder_api%', '@logger']
     calls:
       - [setTemplates, [{ helper_thumbnail: 'SonataMediaBundle:Provider:thumbnail.html.twig', helper_view: 'SonataMediaBundle:Provider:view_video.html.twig' }]]
+
+  os2display.middleware.service:
+    class: Os2Display\CoreBundle\Services\MiddlewareService
+    arguments: ['@doctrine.orm.entity_manager', '@jms_serializer', '@os2display.core.cache', 300]
+    public: true
