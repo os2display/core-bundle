@@ -143,5 +143,5 @@ services:
 
   os2display.middleware.service:
     class: Os2Display\CoreBundle\Services\MiddlewareService
-    arguments: ['@doctrine.orm.entity_manager', '@jms_serializer', '@os2display.core.cache', 300]
+    arguments: ['@doctrine.orm.entity_manager', '@jms_serializer', '@os2display.core.cache', 300, '@event_dispatcher']
     public: true
