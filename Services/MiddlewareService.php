@@ -212,7 +212,7 @@ class MiddlewareService
 
         // Serialize the channels in the region array.
         foreach ($result->channels as $channelId => $channelObject) {
-            if ($channelObject->isSharedChannel) {
+            if (isset($channelObject->isSharedChannel) && $channelObject->isSharedChannel) {
                 $channel = $this->sharedChannelRepository->findOneByUniqueId($channelId);
                 $serializedChannel = $this->getSharedChannelArray($channel);
                 $serializedChannel->data->slides = json_decode($serializedChannel->data->slides);
