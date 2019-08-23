@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 2.1.1
+
+* Merged https://github.com/os2display/core-bundle/pull/12 fixing issues with feed reader.
+
 ## 2.1.0
 
 * Added support for screen-bundle.
