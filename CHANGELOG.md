@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 2.1.2
+
+* Merged https://github.com/os2display/core-bundle/pull/13 fixing check to avoid null issue.
+
 ## 2.1.1
 
 * Merged https://github.com/os2display/core-bundle/pull/12 fixing issues with feed reader.
