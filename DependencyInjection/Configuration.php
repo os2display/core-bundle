@@ -27,8 +27,13 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->integerNode('cache_ttl')->end()
-                ->arrayNode('zencoder_outputs')
-                    ->scalarPrototype()->end()
+                ->arrayNode('zencoder')
+                    ->children()
+                        ->arrayNode('outputs')
+                            ->scalarPrototype()->end()
+                        ->end()
+// @TODO:               ->scalarNode('remove_original')->defaultTrue()->end()
+                    ->end()
                 ->end()
             ->end();
 

@@ -28,9 +28,11 @@ class Os2DisplayCoreExtension extends Os2DisplayBaseExtension {
         $def->replaceArgument(3, $config['cache_ttl']);
     }
 
-    $def = $container->getDefinition('sonata.media.provider.zencoder');
-      if (isset($config['zencoder_outputs'])) {
-          $def->replaceArgument(0, $config['zencoder_outputs']);
+    if (isset($config['zencoder'])) {
+      if (isset($config['zencoder']['outputs'])) {
+        $def = $container->getDefinition('sonata.media.provider.zencoder');
+        $def->replaceArgument(0, $config['zencoder']['outputs']);
       }
+    }
   }
 }
