@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('outputs')
                             ->scalarPrototype()->end()
                         ->end()
-// @TODO:               ->scalarNode('remove_original')->defaultTrue()->end()
+                       ->booleanNode('remove_original')->defaultFalse()->end()
                     ->end()
                 ->end()
             ->end();

@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class CronCommand
@@ -55,6 +56,8 @@ class ZencoderCommand extends ContainerAwareCommand {
 
     // Find the correct media.
     $media_manager = $this->getContainer()->get('sonata.media.manager.media');
+
+    /* @var MediaInterface|null $local_media */
     $local_media = $media_manager->findOneBy(array('id' => $post->job->pass_through));
 
     if ($local_media) {
@@ -68,8 +71,7 @@ class ZencoderCommand extends ContainerAwareCommand {
 
         $metadata = array();
 
-        // Handle all the trans-coded video files. There should be mp4, ogv and
-        // webm encoded video files.
+        // Handle all the transcoded video files.
         foreach ($post->outputs as $file_metadata) {
           $video_filename = basename(substr($file_metadata->url, 0, strpos($file_metadata->url, '?')));
 
@@ -160,6 +162,15 @@ class ZencoderCommand extends ContainerAwareCommand {
         $local_media->setProviderStatus(MediaInterface::STATUS_OK);
 
         $media_manager->save($local_media);
+
+        $removeOriginal = $this->getContainer()->getParameter('os2_display_core.zencoder.remove_original');
+        if ($removeOriginal) {
+            $filePath = $path.'/'.$local_media->getProviderReference();
+            $output->writeln('Removing original video ('.$filePath.')');
+            $fileSystem = new Filesystem();
+            $fileSystem->remove($filePath);
+            $output->writeln('Original file removed');
+        }
       }
       else {
         $msg = 'Media already handled (mediaId: ' . $post->job->pass_through . ', jobId: ' . $post->job->id .')';
