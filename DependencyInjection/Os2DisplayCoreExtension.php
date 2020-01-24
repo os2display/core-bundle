@@ -33,6 +33,7 @@ class Os2DisplayCoreExtension extends Os2DisplayBaseExtension {
         $def = $container->getDefinition('sonata.media.provider.zencoder');
         $def->replaceArgument(0, $config['zencoder']['outputs']);
       }
+      $container->setParameter('os2_display_core.zencoder.remove_original', $config['zencoder']['outputs'] ?? false);
     }
   }
 }

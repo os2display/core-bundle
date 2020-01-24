@@ -164,6 +164,7 @@ class ZencoderCommand extends ContainerAwareCommand {
         $media_manager->save($local_media);
 
         $removeOriginal = $this->getContainer()->getParameter('os2_display_core.zencoder.remove_original');
+        $output->writeln('Remove original set to: '.$removeOriginal);
         if ($removeOriginal) {
             $filePath = $path.'/'.$local_media->getProviderReference();
             $output->writeln('Removing original video ('.$filePath.')');
