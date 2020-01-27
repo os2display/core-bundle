@@ -163,9 +163,10 @@ class ZencoderCommand extends ContainerAwareCommand {
 
         $media_manager->save($local_media);
 
+        // Clean out original movie (if enabled), since only the transcoded files are used.
         $removeOriginal = $this->getContainer()->getParameter('os2_display_core.zencoder.remove_original');
         $output->writeln('Remove original set to: '.$removeOriginal);
-        if ($removeOriginal) {
+        if ($removeOriginal === true) {
             $filePath = $path.'/'.$local_media->getProviderReference();
             $output->writeln('Removing original video ('.$filePath.')');
             $fileSystem = new Filesystem();
