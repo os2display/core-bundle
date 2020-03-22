@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 2.2.0
+
+* Merged https://github.com/os2display/core-bundle/pull/15 - Feature: Configurable video formats.
+
 ## 2.1.3
 
 * Merged https://github.com/os2display/core-bundle/pull/14 fixing issue with relative url in user creation mail.
