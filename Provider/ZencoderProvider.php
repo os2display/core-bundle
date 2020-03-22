@@ -28,26 +28,29 @@ class ZencoderProvider extends BaseProvider {
   protected $hostname;
   protected $apiKey;
   protected $logger;
+  protected $outputs;
 
-  /**
-   * Setup the provider with correct hostname and API key.
-   *
-   * hostname is current hostname taken from paramenters.yml.
-   * api_key is Zencoder API KEY.
-   *
-   * @param string $name
-   * @param Filesystem $filesystem
-   * @param CDNInterface $cdn
-   * @param GeneratorInterface $pathGenerator
-   * @param ThumbnailInterface $thumbnail
-   * @param $hostname
-   * @param $apiKey
-   * @param $logger
-   *   Logger interface to write message to system logs.
-   */
-  public function __construct($name, Filesystem $filesystem, CDNInterface $cdn, GeneratorInterface $pathGenerator, ThumbnailInterface $thumbnail, $hostname, $apiKey, LoggerInterface $logger) {
+    /**
+     * Setup the provider with correct hostname and API key.
+     *
+     * hostname is current hostname taken from paramenters.yml.
+     * api_key is Zencoder API KEY.
+     *
+     * @param array $outputs
+     * @param string $name
+     * @param Filesystem $filesystem
+     * @param CDNInterface $cdn
+     * @param GeneratorInterface $pathGenerator
+     * @param ThumbnailInterface $thumbnail
+     * @param $hostname
+     * @param $apiKey
+     * @param \Psr\Log\LoggerInterface $logger
+     *   Logger interface to write message to system logs.
+     */
+  public function __construct(array $outputs, $name, Filesystem $filesystem, CDNInterface $cdn, GeneratorInterface $pathGenerator, ThumbnailInterface $thumbnail, $hostname, $apiKey, LoggerInterface $logger) {
     parent::__construct($name, $filesystem, $cdn, $pathGenerator, $thumbnail);
 
+    $this->outputs = $outputs;
     $this->name = $name;
     $this->hostname = $hostname;
     $this->apiKey = $apiKey;
@@ -64,54 +67,28 @@ class ZencoderProvider extends BaseProvider {
     $url = $this->getCdn()
         ->getPath($this->generatePath($media), FALSE) . '/' . $media->getProviderReference();
 
-    // Setup formats.
-    $mp4 = new \stdClass();
-    $mp4->format = 'mp4';
-    $mp4->label = 'mp4';
-    $mp4->thumbnails = array(
-      array(
-        'label' => 'mp4_thumbnail',
-        'number' => 1,
-        'height' => 150,
-      ),
-      array(
-        'label' => 'mp4_landscape',
-        'number' => 1,
-        'width' => 960,
-      ),
-    );
+    $apiOutputs = [];
 
-    $ogv = new \stdClass();
-    $ogv->format = 'ogv';
-    $ogv->label = 'ogv';
-    $ogv->thumbnails = array(
-      array(
-        'label' => 'ogv_thumbnail',
-        'number' => 1,
-        'height' => 150,
-      ),
-      array(
-        'label' => 'ogv_landscape',
-        'number' => 1,
-        'width' => 960,
-      ),
-    );
+    foreach ($this->outputs as $output) {
+        // Setup formats.
+        $apiOutput = new \stdClass();
+        $apiOutput->format = $output;
+        $apiOutput->label = $output;
+        $apiOutput->thumbnails = array(
+            array(
+                'label' => $output.'_thumbnail',
+                'number' => 1,
+                'height' => 150,
+            ),
+            array(
+                'label' => $output.'_landscape',
+                'number' => 1,
+                'width' => 960,
+            ),
+        );
 
-    $webm = new \stdClass();
-    $webm->format = 'webm';
-    $webm->label = 'webm';
-    $webm->thumbnails = array(
-      array(
-        'label' => 'webm_thumbnail',
-        'number' => 1,
-        'height' => 150,
-      ),
-      array(
-        'label' => 'webm_landscape',
-        'number' => 1,
-        'width' => 960,
-      ),
-    );
+        $apiOutputs[] = $apiOutput;
+    }
 
     // Setup Zencoder call.
     $api = new \stdClass();
@@ -119,11 +96,7 @@ class ZencoderProvider extends BaseProvider {
     $api->api_key = $this->apiKey;
     $api->region = 'europe';
     $api->notifications = $this->hostname . '/zencoder/callback';
-    $api->outputs = array(
-      $mp4,
-      $ogv,
-      $webm,
-    );
+    $api->outputs = $apiOutputs;
 
     // Set custom ID on the encoding job.
     $api->pass_through = $media->getId();

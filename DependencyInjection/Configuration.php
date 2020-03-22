@@ -27,6 +27,14 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->integerNode('cache_ttl')->end()
+                ->arrayNode('zencoder')
+                    ->children()
+                        ->arrayNode('outputs')
+                            ->scalarPrototype()->end()
+                        ->end()
+                       ->booleanNode('remove_original')->defaultFalse()->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
