@@ -29,7 +29,7 @@ class CleanupCommand extends ContainerAwareCommand {
    */
   protected function configure() {
     $this
-      ->setName('os2display:core:cleanup')
+      ->setName('os2display:core:cleanup:entity')
       ->addOption(
         'dry-run',
         NULL,
