@@ -34,30 +34,45 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
 
         $media = $em->getRepository(Media::class)->findAll();
 
-        $io->writeln(sprintf('Media entities: %d', count($media)));
-
         /* @var \Os2Display\MediaBundle\Entity\Media $mediaEntity */
         $urls = [];
         $thumbs = [];
+
         foreach ($media as $mediaEntity) {
             $providerName = $mediaEntity->getProviderName();
 
             // Video
             if ($providerName === 'sonata.media.provider.zencoder') {
-                $metadata = $media->getProviderMetadata();
-                $mediaUrls = array();
+                $metadata = $mediaEntity->getProviderMetadata();
 
                 foreach ($metadata as $data) {
-                    $mediaUrls[$data['label']] = $data['reference'];
+                    if (isset($data['reference'])) {
+                        $url = explode('/web/uploads/media/', $data['reference']);
+                        if (isset($url[1])) {
+                            $urls[] = $url[1];
+                        }
+                        else {
+                            $io->error(sprintf('File not in "/web/uploads/media/": %s', json_encode($url)));
+                            return;
+                        }
+                    }
+                    if (isset($data['thumbnails'])) {
+                        foreach ($data['thumbnails'] as $thumbnail) {
+                            $url = explode('/web/uploads/media/', $thumbnail['reference']);
+                            if (isset($url[1])) {
+                                $thumbs[] = $url[1];
+                            }
+                            else {
+                                $io->error(sprintf('File not in "/web/uploads/media/": %s', json_encode($url)));
+                                return;
+                            }
+                        }
+                    }
                 }
-
-                $thumbs[] = $metadata[0]['thumbnails'][1]['reference'];
-                $urls[] = $mediaUrls;
             }
             // Image
             else {
                 if ($providerName === 'sonata.media.provider.image') {
-
                     /** @var ImageProvider $provider */
                     $provider = $this->getContainer()->get($mediaEntity->getProviderName());
                     $urls[] = $provider->generatePrivateUrl($mediaEntity, 'reference');
@@ -70,36 +85,43 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
             }
         }
 
-        $io->writeln(sprintf('Media files: %d', count($urls) + count($thumbs)));
-
-        // $io->writeln('Files: '. json_encode($urls));
-        // $io->writeln('Thumbs: '. json_encode($thumbs));
-
         $finder = new Finder();
         $files = $finder->files()->in('web/uploads/media/*/*/*');
 
         $uploadFiles = [];
 
         foreach ($files as $file) {
-            $uploadFiles[] = explode('/app/web/uploads/media/', $file->getRealPath())[1];
+            $url =  explode('/web/uploads/media/', $file->getRealPath());
+            if (isset($url[1])) {
+                $uploadFiles[] = $url[1];
+            }
+            else {
+                $io->error(sprintf('File not in "/web/uploads/media/": %s', json_encode($url)));
+                return;
+            }
         }
-
-        $io->writeln(sprintf('Files in uploads: %d', count($uploadFiles)));
-        // $io->writeln(sprintf('Files in uploads: %s', json_encode($uploadFiles)));
-
-        $io->writeln('---------------------------');
-        $io->writeln('-- Files not in entities --');
-        $io->writeln('---------------------------');
 
         $filesWithoutEntity = [];
 
         foreach ($uploadFiles as $uploadFile) {
             if (!in_array($uploadFile, $urls) && !in_array($uploadFile, $thumbs)) {
-                $io->writeln(sprintf('%s', $uploadFile));
                 $filesWithoutEntity[] = $uploadFile;
             }
         }
 
+        $io->writeln('---------------------------');
+        $io->writeln('-- Summary ----------------');
+        $io->writeln('---------------------------');
+        $io->writeln(sprintf('Media entities: %d', count($media)));
+        $io->writeln(sprintf('Media files: %d', count($urls) + count($thumbs)));
+        $io->writeln(sprintf('Files in uploads: %d', count($uploadFiles)));
         $io->writeln(sprintf('Files without entity: %d', count($filesWithoutEntity)));
+
+        $io->writeln('---------------------------');
+        $io->writeln('-- Files not in entities --');
+        $io->writeln('---------------------------');
+        foreach ($filesWithoutEntity as $file) {
+            $io->writeln(sprintf('%s', $file));
+        }
     }
 }
