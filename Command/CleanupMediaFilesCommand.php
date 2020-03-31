@@ -47,23 +47,23 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
 
                 foreach ($metadata as $data) {
                     if (isset($data['reference'])) {
-                        $url = explode('/web/uploads/media/', $data['reference']);
+                        $url = explode('/uploads/media/', $data['reference']);
                         if (isset($url[1])) {
                             $urls[] = $url[1];
                         }
                         else {
-                            $io->error(sprintf('File not in "/web/uploads/media/": %s', json_encode($url)));
+                            $io->error(sprintf('File not in "/uploads/media/": %s', json_encode($url)));
                             return;
                         }
                     }
                     if (isset($data['thumbnails'])) {
                         foreach ($data['thumbnails'] as $thumbnail) {
-                            $url = explode('/web/uploads/media/', $thumbnail['reference']);
+                            $url = explode('/uploads/media/', $thumbnail['reference']);
                             if (isset($url[1])) {
                                 $thumbs[] = $url[1];
                             }
                             else {
-                                $io->error(sprintf('File not in "/web/uploads/media/": %s', json_encode($url)));
+                                $io->error(sprintf('File not in "/uploads/media/": %s', json_encode($url)));
                                 return;
                             }
                         }
