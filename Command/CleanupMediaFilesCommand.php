@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class CleanupMediaFilesCommand extends ContainerAwareCommand
@@ -19,8 +20,9 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
             ->addOption(
                 'dry-run',
                 NULL,
-                InputOption::VALUE_NONE,
-                'Execute the cleanup without applying results to database.'
+                InputOption::VALUE_OPTIONAL,
+                'Execute the cleanup without applying results to database.',
+                true
             )
             ->setDescription('Delete media without references in the database.');
     }
@@ -28,6 +30,10 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
+
+        $dryRun = $input->getOption('dry-run') === 'false' ? false : true;
+
+        $io->writeln(sprintf('Dry-run: %s', ($dryRun ? 'true' : 'false')));
 
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
@@ -43,8 +49,14 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
 
             // Video
             if ($providerName === 'sonata.media.provider.zencoder') {
+                /** @var \Os2Display\CoreBundle\Provider\ZencoderProvider $provider */
+                // Add original file.
+                $provider = $this->getContainer()->get($mediaEntity->getProviderName());
+                $urls[] = $provider->getReferenceFile($mediaEntity)->getName();
+
                 $metadata = $mediaEntity->getProviderMetadata();
 
+                // Add processed files.
                 foreach ($metadata as $data) {
                     if (isset($data['reference'])) {
                         $url = explode('/uploads/media/', $data['reference']);
@@ -71,17 +83,19 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
                 }
             }
             // Image
+            else if ($providerName === 'sonata.media.provider.image') {
+                /** @var ImageProvider $provider */
+                $provider = $this->getContainer()->get($mediaEntity->getProviderName());
+                $urls[] = $provider->generatePrivateUrl($mediaEntity, 'reference');
+                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'admin');
+                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_portrait');
+                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_portrait_small');
+                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_landscape');
+                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_landscape_small');
+            }
             else {
-                if ($providerName === 'sonata.media.provider.image') {
-                    /** @var ImageProvider $provider */
-                    $provider = $this->getContainer()->get($mediaEntity->getProviderName());
-                    $urls[] = $provider->generatePrivateUrl($mediaEntity, 'reference');
-                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'admin');
-                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_portrait');
-                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_portrait_small');
-                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_landscape');
-                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_landscape_small');
-                }
+                $io->error(sprintf('Unsupported provider: %s', $providerName));
+                return;
             }
         }
 
@@ -121,7 +135,12 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
         $io->writeln('-- Files not in entities --');
         $io->writeln('---------------------------');
         foreach ($filesWithoutEntity as $file) {
-            $io->writeln(sprintf('%s', $file));
+            if (!$dryRun) {
+                $fileSystem = new Filesystem();
+                $fileSystem->remove('web/uploads/media/'.$file);
+            }
+
+            $io->writeln(sprintf('%s %s', $file, !$dryRun ? 'removed' : ''));
         }
     }
 }
