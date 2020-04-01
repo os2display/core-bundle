@@ -18,11 +18,16 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
         $this
             ->setName('os2display:core:cleanup:media')
             ->addOption(
-                'dry-run',
+                'force',
                 NULL,
-                InputOption::VALUE_OPTIONAL,
-                'Execute the cleanup without applying results to database.',
-                true
+                InputOption::VALUE_NONE,
+                'Delete the found files.'
+            )
+            ->addOption(
+                'print-files',
+                NULL,
+                InputOption::VALUE_NONE,
+                'Print the filenames of the files to be deleted.'
             )
             ->setDescription('Delete media without references in the database.');
     }
@@ -31,9 +36,18 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
     {
         $io = new SymfonyStyle($input, $output);
 
-        $dryRun = $input->getOption('dry-run') === 'false' ? false : true;
+        $force = $input->getOption('force');
+        $printFiles = $input->getOption('print-files');
 
-        $io->writeln(sprintf('Dry-run: %s', ($dryRun ? 'true' : 'false')));
+        $io->writeln('---------------------------');
+        $io->writeln('-- Selected options -------');
+        $io->writeln('---------------------------');
+        $io->writeln(sprintf('force: %s', ($force ? 'true' : 'false')));
+        $io->writeln(sprintf('print-files: %s', ($printFiles ? 'true' : 'false')));
+
+        if (!$force) {
+            $io->warning('No files will be deleted. To delete files run with --force option.');
+        }
 
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
@@ -123,6 +137,24 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
             }
         }
 
+        if ($printFiles) {
+            $io->writeln('---------------------------');
+            $io->writeln('-- Files not in entities --');
+            $io->writeln('---------------------------');
+        }
+        $nFilesDeleted = 0;
+        foreach ($filesWithoutEntity as $file) {
+            if ($force) {
+                $fileSystem = new Filesystem();
+                $fileSystem->remove('web/uploads/media/'.$file);
+                $nFilesDeleted++;
+            }
+
+            if ($printFiles) {
+                $io->writeln(sprintf('%s %s', $file, $force ? 'removed' : ''));
+            }
+        }
+        $io->writeln('');
         $io->writeln('---------------------------');
         $io->writeln('-- Summary ----------------');
         $io->writeln('---------------------------');
@@ -130,17 +162,6 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
         $io->writeln(sprintf('Media files: %d', count($urls) + count($thumbs)));
         $io->writeln(sprintf('Files in uploads: %d', count($uploadFiles)));
         $io->writeln(sprintf('Files without entity: %d', count($filesWithoutEntity)));
-
-        $io->writeln('---------------------------');
-        $io->writeln('-- Files not in entities --');
-        $io->writeln('---------------------------');
-        foreach ($filesWithoutEntity as $file) {
-            if (!$dryRun) {
-                $fileSystem = new Filesystem();
-                $fileSystem->remove('web/uploads/media/'.$file);
-            }
-
-            $io->writeln(sprintf('%s %s', $file, !$dryRun ? 'removed' : ''));
-        }
+        $io->writeln(sprintf('Files deleted: %d', $nFilesDeleted));
     }
 }
