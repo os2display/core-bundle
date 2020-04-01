@@ -78,8 +78,8 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
             // Video
             if ($providerName === 'sonata.media.provider.zencoder') {
                 /** @var \Os2Display\CoreBundle\Provider\ZencoderProvider $provider */
-                // Add original file.
                 $provider = $this->getContainer()->get($mediaEntity->getProviderName());
+                // Add original file.
                 $urls[] = $provider->getReferenceFile($mediaEntity)->getName();
 
                 $metadata = $mediaEntity->getProviderMetadata();
@@ -91,7 +91,7 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
                         if (isset($url[1])) {
                             $urls[] = $url[1];
                         } else {
-                            $io->error(sprintf('File not in "/uploads/media/": %s', json_encode($url)));
+                            $io->error(sprintf('Filename not in "/uploads/media/": %s', json_encode($url)));
 
                             return;
                         }
@@ -102,7 +102,7 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
                             if (isset($url[1])) {
                                 $thumbs[] = $url[1];
                             } else {
-                                $io->error(sprintf('File not in "/uploads/media/": %s', json_encode($url)));
+                                $io->error(sprintf('Filename not in "/uploads/media/": %s', json_encode($url)));
 
                                 return;
                             }
