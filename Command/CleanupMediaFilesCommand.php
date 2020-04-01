@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class CleanupMediaFilesCommand.
@@ -29,10 +30,17 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
         $this
             ->setName('os2display:core:cleanup:media')
             ->addOption(
-                'force',
+                'delete-files',
                 null,
                 InputOption::VALUE_NONE,
                 'Delete the found files.'
+            )
+            ->addOption(
+                'move-files',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Move the found files to the given directory.',
+                false
             )
             ->addOption(
                 'print-files',
@@ -48,22 +56,30 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $container = $this->getContainer();
         $io = new SymfonyStyle($input, $output);
 
-        $force = $input->getOption('force');
+        $deleteFiles = $input->getOption('delete-files');
+        $moveFiles = $input->getOption('move-files');
         $printFiles = $input->getOption('print-files');
 
         $io->writeln('---------------------------');
         $io->writeln('-- Selected options -------');
         $io->writeln('---------------------------');
-        $io->writeln(sprintf('force: %s', ($force ? 'true' : 'false')));
+        $io->writeln(sprintf('delete-files: %s', ($deleteFiles ? 'true' : 'false')));
         $io->writeln(sprintf('print-files: %s', ($printFiles ? 'true' : 'false')));
+        $io->writeln(sprintf('move-files: %s', ($moveFiles === false ? 'false' : $moveFiles)));
 
-        if (!$force) {
-            $io->warning('No files will be deleted. To delete files run with --force option.');
+        if ($deleteFiles && $moveFiles !== false) {
+            $io->error('--delete-files and --move-files options cannot both be set.');
+            return 1;
         }
 
-        $doctrine = $this->getContainer()->get('doctrine');
+        if (!$deleteFiles && $moveFiles === false) {
+            $io->warning('No files will be deleted or moved. To delete files run with --delete-files option. To move files run with --move-files=/path/to/move/to/');
+        }
+
+        $doctrine = $container->get('doctrine');
         $em = $doctrine->getManager();
 
         $media = $em->getRepository(Media::class)->findAll();
@@ -93,7 +109,7 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
                         } else {
                             $io->error(sprintf('Filename not in "/uploads/media/": %s', json_encode($url)));
 
-                            return;
+                            return 1;
                         }
                     }
                     if (isset($data['thumbnails'])) {
@@ -104,7 +120,7 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
                             } else {
                                 $io->error(sprintf('Filename not in "/uploads/media/": %s', json_encode($url)));
 
-                                return;
+                                return 1;
                             }
                         }
                     }
@@ -124,7 +140,7 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
                 } else {
                     $io->error(sprintf('Unsupported provider: %s', $providerName));
 
-                    return;
+                    return 1;
                 }
             }
         }
@@ -141,7 +157,7 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
             } else {
                 $io->error(sprintf('File not in "/web/uploads/media/": %s', json_encode($url)));
 
-                return;
+                return 1;
             }
         }
 
@@ -158,16 +174,43 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
             $io->writeln('-- Files not in entities --');
             $io->writeln('---------------------------');
         }
+
+        $fileSystem = new Filesystem();
+        $projectDir = $container->get('kernel')->getProjectDir();
         $nFilesDeleted = 0;
+        $nFilesMoved = 0;
+        $fileSizeToBeDeleted = 0;
+
+        if ($moveFiles !== false) {
+            $fileSystem->mkdir($moveFiles);
+        }
+
         foreach ($filesWithoutEntity as $file) {
-            if ($force) {
-                $fileSystem = new Filesystem();
-                $fileSystem->remove('web/uploads/media/'.$file);
+            $fileSize = filesize($projectDir.'/web/uploads/media/'.$file) ?? 0;
+            $fileSizeToBeDeleted = $fileSizeToBeDeleted + $fileSize;
+
+            if ($deleteFiles) {
+                $fileSystem->remove($projectDir.'/web/uploads/media/'.$file);
                 $nFilesDeleted++;
+            }
+            else if ($moveFiles !== false) {
+                $folders = explode('/', $file);
+                // Remove filename from folders.
+                array_pop($folders);
+
+                // Make sure target folder exists.
+                $currentFolder = $moveFiles;
+                for ($i = 0; $i < count($folders); $i++) {
+                    $currentFolder = $currentFolder.'/'.$folders[$i];
+                    $fileSystem->mkdir($currentFolder);
+                }
+
+                $fileSystem->rename($projectDir.'/web/uploads/media/'.$file, $moveFiles.$file);
+                $nFilesMoved++;
             }
 
             if ($printFiles) {
-                $io->writeln(sprintf('%s %s', $file, $force ? 'removed' : ''));
+                $io->writeln(sprintf('%s %s', $file, $deleteFiles ? 'removed' : ''));
             }
         }
         $io->writeln('');
@@ -178,6 +221,10 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
         $io->writeln(sprintf('Media files: %d', count($urls) + count($thumbs)));
         $io->writeln(sprintf('Files in uploads: %d', count($uploadFiles)));
         $io->writeln(sprintf('Files without entity: %d', count($filesWithoutEntity)));
+        $io->writeln(sprintf('Files without entity file size: %d bytes', $fileSizeToBeDeleted));
         $io->writeln(sprintf('Files deleted: %d', $nFilesDeleted));
+        $io->writeln(sprintf('Files moved: %d', $nFilesMoved));
+
+        return 0;
     }
 }
