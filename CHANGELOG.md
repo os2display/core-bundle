@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 2.2.1
+
+* Merged PR https://github.com/os2display/core-bundle/pull/16 - Added cleanup command to remove files in upload folder that are not connected to Media entities.
+
 ## 2.2.0
 
 * Merged https://github.com/os2display/core-bundle/pull/15 - Feature: Configurable video formats.
