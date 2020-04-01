@@ -29,7 +29,7 @@ class CleanupCommand extends ContainerAwareCommand {
    */
   protected function configure() {
     $this
-      ->setName('os2display:core:cleanup')
+      ->setName('os2display:core:cleanup:entity')
       ->addOption(
         'dry-run',
         NULL,
@@ -192,14 +192,14 @@ class CleanupCommand extends ContainerAwareCommand {
     }
 
     $output->writeln('');
-    $output->writeln('### Summery ###');
+    $output->writeln('### Summary ###');
     if ($dryRun) {
       $output->writeln('Dry-run enabled. No entities deleted.');
     }
     $output->writeln('Channels deleted: ' . $numberOfDeletedChannels);
     $output->writeln('Slides deleted: ' . $numberOfDeletedSlides);
     $output->writeln('Media deleted: ' . $numberOfDeletedMedia);
-    $output->writeln('### Summery ###');
+    $output->writeln('### Summary ###');
     $output->writeln('');
     $output->writeln('Cleanup done.');
   }
