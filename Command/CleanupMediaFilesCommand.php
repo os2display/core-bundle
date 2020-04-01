@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains command to cleanup media folder of files that are not connected to a Media entities.
+ */
 
 namespace Os2Display\CoreBundle\Command;
 
@@ -12,26 +16,36 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Class CleanupMediaFilesCommand.
+ */
 class CleanupMediaFilesCommand extends ContainerAwareCommand
 {
-    protected function configure() {
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
         $this
             ->setName('os2display:core:cleanup:media')
             ->addOption(
                 'force',
-                NULL,
+                null,
                 InputOption::VALUE_NONE,
                 'Delete the found files.'
             )
             ->addOption(
                 'print-files',
-                NULL,
+                null,
                 InputOption::VALUE_NONE,
                 'Print the filenames of the files to be deleted.'
             )
             ->setDescription('Delete media without references in the database.');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
@@ -76,9 +90,9 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
                         $url = explode('/uploads/media/', $data['reference']);
                         if (isset($url[1])) {
                             $urls[] = $url[1];
-                        }
-                        else {
+                        } else {
                             $io->error(sprintf('File not in "/uploads/media/": %s', json_encode($url)));
+
                             return;
                         }
                     }
@@ -87,29 +101,31 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
                             $url = explode('/uploads/media/', $thumbnail['reference']);
                             if (isset($url[1])) {
                                 $thumbs[] = $url[1];
-                            }
-                            else {
+                            } else {
                                 $io->error(sprintf('File not in "/uploads/media/": %s', json_encode($url)));
+
                                 return;
                             }
                         }
                     }
                 }
             }
-            // Image
-            else if ($providerName === 'sonata.media.provider.image') {
-                /** @var ImageProvider $provider */
-                $provider = $this->getContainer()->get($mediaEntity->getProviderName());
-                $urls[] = $provider->generatePrivateUrl($mediaEntity, 'reference');
-                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'admin');
-                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_portrait');
-                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_portrait_small');
-                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_landscape');
-                $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_landscape_small');
-            }
             else {
-                $io->error(sprintf('Unsupported provider: %s', $providerName));
-                return;
+                // Image
+                if ($providerName === 'sonata.media.provider.image') {
+                    /** @var ImageProvider $provider */
+                    $provider = $this->getContainer()->get($mediaEntity->getProviderName());
+                    $urls[] = $provider->generatePrivateUrl($mediaEntity, 'reference');
+                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'admin');
+                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_portrait');
+                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_portrait_small');
+                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_landscape');
+                    $thumbs[] = $provider->generatePrivateUrl($mediaEntity, 'default_landscape_small');
+                } else {
+                    $io->error(sprintf('Unsupported provider: %s', $providerName));
+
+                    return;
+                }
             }
         }
 
@@ -119,12 +135,12 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
         $uploadFiles = [];
 
         foreach ($files as $file) {
-            $url =  explode('/web/uploads/media/', $file->getRealPath());
+            $url = explode('/web/uploads/media/', $file->getRealPath());
             if (isset($url[1])) {
                 $uploadFiles[] = $url[1];
-            }
-            else {
+            } else {
                 $io->error(sprintf('File not in "/web/uploads/media/": %s', json_encode($url)));
+
                 return;
             }
         }
