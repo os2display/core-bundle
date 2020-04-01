@@ -68,10 +68,10 @@ class CleanupMediaFilesCommand extends ContainerAwareCommand
 
         $media = $em->getRepository(Media::class)->findAll();
 
-        /* @var \Os2Display\MediaBundle\Entity\Media $mediaEntity */
         $urls = [];
         $thumbs = [];
 
+        /* @var \Os2Display\MediaBundle\Entity\Media $mediaEntity */
         foreach ($media as $mediaEntity) {
             $providerName = $mediaEntity->getProviderName();
 
