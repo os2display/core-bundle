@@ -15,6 +15,7 @@ class Roles {
   const ROLE_GROUP_ADMIN = 'ROLE_GROUP_ADMIN';
   const ROLE_USER_ADMIN = 'ROLE_USER_ADMIN';
   const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+  const ROLE_SCREEN_ADMIN = 'ROLE_SCREEN_ADMIN';
 
   public static function getRoleNames() {
     $class = new \ReflectionClass(static::class);
