@@ -123,6 +123,7 @@ class SerializationListener implements EventSubscriberInterface {
           $urls = array();
 
           // Set media paths
+          /** @var \Os2Display\CoreBundle\Entity\Slide $slide */
           $slide = $event->getObject();
           foreach ($slide->getMedia() as $media) {
             $providerName = $media->getProviderName();
@@ -163,13 +164,17 @@ class SerializationListener implements EventSubscriberInterface {
           $event->getVisitor()->addData('logo', $logoPath);
 
           // Set template paths
+          /** @var \Os2Display\CoreBundle\Entity\SlideTemplate $template */
           $template = $this->container->get('doctrine')->getRepository('Os2DisplayCoreBundle:SlideTemplate')->findOneById($slide->getTemplate());
-          $event->getVisitor()->addData('template_path', $template->getPathLive());
-          $event->getVisitor()->addData('path', $template->getPath());
-          $event->getVisitor()->addData('css_path', $template->getPathCss());
-          $event->getVisitor()->addData('js_path', $template->getPathJs());
-          $event->getVisitor()->addData('js_script_id', $template->getScriptId());
-          $event->getVisitor()->addData('server_path', $this->container->getParameter('absolute_path_to_server'));
+
+          if ($template != null) {
+              $event->getVisitor()->addData('template_path', $template->getPathLive());
+              $event->getVisitor()->addData('path', $template->getPath());
+              $event->getVisitor()->addData('css_path', $template->getPathCss());
+              $event->getVisitor()->addData('js_path', $template->getPathJs());
+              $event->getVisitor()->addData('js_script_id', $template->getScriptId());
+              $event->getVisitor()->addData('server_path', $this->container->getParameter('absolute_path_to_server'));
+          }
         }
         else {
           if (in_array('sharing', $groups)) {
@@ -177,6 +182,7 @@ class SerializationListener implements EventSubscriberInterface {
             $thumbs = array();
 
             // Set media paths
+            /** @var \Os2Display\CoreBundle\Entity\Slide $slide */
             $slide = $event->getObject();
             foreach ($slide->getMedia() as $media) {
               $providerName = $media->getProviderName();
@@ -218,17 +224,18 @@ class SerializationListener implements EventSubscriberInterface {
             $event->getVisitor()->addData('logo', $logoPath);
 
             // Set template paths
+            /** @var \Os2Display\CoreBundle\Entity\SlideTemplate $template */
             $template = $this->container->get('doctrine')->getRepository('Os2DisplayCoreBundle:SlideTemplate')->findOneById($slide->getTemplate());
-            $event->getVisitor()
-              ->addData('preview_path', $template->getPathPreview());
-            $event->getVisitor()
-              ->addData('template_path', $template->getPathLive());
-            $event->getVisitor()->addData('path', $template->getPath());
-            $event->getVisitor()
-              ->addData('css_path', $template->getPathCss());
-            $event->getVisitor()->addData('js_path', $template->getPathJs());
-            $event->getVisitor()->addData('js_script_id', $template->getScriptId());
-            $event->getVisitor()->addData('server_path', $this->container->getParameter('absolute_path_to_server'));
+
+            if ($template != null) {
+              $event->getVisitor()->addData('preview_path', $template->getPathPreview());
+              $event->getVisitor()->addData('template_path', $template->getPathLive());
+              $event->getVisitor()->addData('path', $template->getPath());
+              $event->getVisitor()->addData('css_path', $template->getPathCss());
+              $event->getVisitor()->addData('js_path', $template->getPathJs());
+              $event->getVisitor()->addData('js_script_id', $template->getScriptId());
+              $event->getVisitor()->addData('server_path', $this->container->getParameter('absolute_path_to_server'));
+            }
           }
         }
       }
