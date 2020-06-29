@@ -1,5 +1,9 @@
 # Os2Display/CoreBundle CHANGELOG
 
+## 2.2.3
+
+* Merged PR https://github.com/os2display/core-bundle/pull/18 - Added screen admin role. Fixed issue with serialization listener.
+
 ## 2.2.2
 
 * Merged PR https://github.com/os2display/core-bundle/pull/17 - Expanded cleanup media folder command.
