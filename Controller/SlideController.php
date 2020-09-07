@@ -19,6 +19,44 @@ use Os2Display\CoreBundle\Events\SharingServiceEvents;
  */
 class SlideController extends Controller
 {
+  /**
+   * Clone a slide.
+   *
+   * @Route("/{id}/clone")
+   * @Method("post")
+   *
+   * @param int $id
+   *   Slide id of the slide to clone.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   */
+  public function slideCloneAction($id)
+  {
+
+    $response = new Response();
+    $response->setStatusCode(200);
+
+    $slide = $this->getDoctrine()
+      ->getRepository('Os2DisplayCoreBundle:Slide')
+      ->findOneById($id);
+
+    // Create response.
+    $response = new Response();
+
+    if (!$slide) {
+        // Not found.
+        $response->setStatusCode(404);
+    }
+
+    /** @var \Os2Display\CoreBundle\Services\EntityService $entityService */
+    $entityService = $this->get('os2display.entity_service');
+    $entityService->cloneSlide($slide);
+
+    $response->setStatusCode(200);
+
+    return $response;
+  }
+
     /**
      * Save a (new) slide.
      *

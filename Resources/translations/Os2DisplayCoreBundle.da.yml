@@ -6,6 +6,11 @@ user:
       content: Der er blevet oprettet en bruger til dig på OS2display.
       activate: 'For at aktivere din konto skal du besøge følgende link i din browser:'
 
+administration:
+  clone:
+    cloned_slide_title: "Kopi af \"%original_title%\""
+    cloned_channel_title: "Kopi af \"%original_title%\""
+
 ROLE_USER: Bruger
 ROLE_GROUP_ADMIN: Gruppeadministrator
 ROLE_USER_ADMIN: Brugeradministrator

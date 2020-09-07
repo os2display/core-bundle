@@ -21,7 +21,42 @@ use JMS\Serializer\SerializationContext;
  */
 class ChannelController extends Controller
 {
-    /**
+  /**
+   * Clone a channel.
+   *
+   * @Route("/{id}/clone")
+   * @Method("post")
+   *
+   * @param int $id
+   *   Slide id of the channel to clone.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   */
+  public function channelCloneAction($id)
+  {
+    /** @var Channel $channel */
+    $channel = $this->getDoctrine()
+      ->getRepository('Os2DisplayCoreBundle:Channel')
+      ->findOneById($id);
+
+    $response = new Response();
+
+    if (!$channel) {
+      $response->setStatusCode(404);
+      return $response;
+    }
+
+    /** @var \Os2Display\CoreBundle\Services\EntityService $entityService */
+    $entityService = $this->get('os2display.entity_service');
+
+    $entityService->cloneChannel($channel);
+
+    $response->setStatusCode(200);
+
+    return $response;
+  }
+
+  /**
      * Save a (new) channel.
      *
      * @Route("")

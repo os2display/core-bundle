@@ -6,6 +6,7 @@
 
 namespace Os2Display\CoreBundle\EventListener;
 
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Os2Display\CoreBundle\Services\UtilityService;
 use JMS\Serializer\Serializer;
@@ -77,7 +78,13 @@ class SearchIndexer {
   protected function sendEvent(LifecycleEventArgs $args, $method) {
     // Get the current entity.
     $entity = $args->getEntity();
-    $type = get_class($entity);
+
+    // Get the actual type of the entity, ensure to handle the situation where
+    // we're passed a proxy.
+    // Notice, ClassUtils is deprecated, the jury is still out on how to
+    // implement the same functionallity in doctrine 3.x though.
+    // https://github.com/doctrine/common/issues/867
+    $type = ClassUtils::getRealClass(get_class($entity));
 
     // Only send Channel, Screen, Slide, Media to search engine
     if ($type !== 'Os2Display\CoreBundle\Entity\Channel' &&

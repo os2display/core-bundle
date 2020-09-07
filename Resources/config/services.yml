@@ -17,7 +17,7 @@ services:
 
   os2display.entity_service:
     class: Os2Display\CoreBundle\Services\EntityService
-    arguments: ['@validator']
+    arguments: ['@validator', '@doctrine.orm.entity_manager', '@translator', '@security.token_storage']
     public: true
 
   os2display.group_manager:
